@@ -12,6 +12,7 @@ class ConnectFive implements FinalProject{
         
     // Public Methods
         public int[] playShortGame(char[][] b, int player){
+            int[] myMove;
             this.board = b;
         
             if(player == 1){
@@ -26,48 +27,56 @@ class ConnectFive implements FinalProject{
             if(computerCanWin()){
                 // check if the computer has four in a row
                 // if so, take win
-                this.board[this.freeSpace[0]][this.freeSpace[1]] = this.computerPiece;
+                myMove = this.freeSpace;
+                return myMove;
             } else if(opponentCanWin()){
                 // block win
                 // if the player has four uninterupted pieces, only block if one side is already blocked 
                 // if the pieces are interrupted block within the interuption
-                this.board[this.freeSpace[0]][this.freeSpace[1]] = this.computerPiece;
+                myMove = this.freeSpace;
+                return myMove;
             } else if(computerHasThreeInARow()){
                 // check if the computer has three in a row
                 // if not blocked, make four
-                this.board[this.freeSpace[0]][this.freeSpace[1]] = this.computerPiece;
+                myMove = this.freeSpace;
+                return myMove;
             } else if(opponentHasThree()){
                 // check if the opponent has three in a row with a blank space on either side
                 // if so, block three
-                this.board[this.freeSpace[0]][this.freeSpace[1]] = this.computerPiece;
+                myMove = this.freeSpace;
+                return myMove;
             } else if(computerHasThree()){
                 // check if the computer has three in a set of five
                 // if not blocked, make four
-                this.board[this.freeSpace[0]][this.freeSpace[1]] = this.computerPiece;
+                myMove = this.freeSpace;
+                return myMove;
             } else if(computerHasTwo()){
                 // check if the computer has two in a set of five
                 // if not blocked, make three
-                this.board[this.freeSpace[0]][this.freeSpace[1]] = this.computerPiece;
+                myMove = this.freeSpace;
+                return myMove;
             } else if(computerHasOne()){
                 // check if the computer has one piece in a set of five
                 // if not blocked, make two
-                this.board[this.freeSpace[0]][this.freeSpace[1]] = this.computerPiece;
+                myMove = this.freeSpace;
+                return myMove;
             } else {
                 // if no other conditions were met, place in a random piece
                 // checking there are not pieces in that spot
                 // make sure there are 4 blank spaces around that piece 
-                int randomRow = random.nextInt(19);
-                int randomColumn = random.nextInt(19);
+                int randomRow = random.nextInt(20);
+                int randomColumn = random.nextInt(20);
                 while(!isEmptySetOfFive(randomRow, randomColumn)){
-                    randomRow = random.nextInt(19);
-                    randomColumn = random.nextInt(19);
+                    randomRow = random.nextInt(20);
+                    randomColumn = random.nextInt(20);
                 }   
-                this.board[randomRow][randomColumn] = this.computerPiece;
+                myMove = this.freeSpace;
+                return myMove;
             }
         }
         
         public int[] playLongGame(char[][] b, int player) {
-        
+            int[] myMove;
             this.board = b;
         
             if(player == 1){
@@ -81,43 +90,51 @@ class ConnectFive implements FinalProject{
             if(computerCanWin()){
                 // check if the computer has four in a row
                 // if so, take win
-                this.board[this.freeSpace[0]][this.freeSpace[1]] = this.computerPiece;
+                myMove = this.freeSpace;
+                return myMove;
             } else if(opponentCanWin()){
                 // block win
                 // if the player has four uninterupted pieces, only block if one side is already blocked 
                 // if the pieces are interrupted block within the interuption
-                this.board[this.freeSpace[0]][this.freeSpace[1]] = this.computerPiece;
+                myMove = this.freeSpace;
+                return myMove;
             } else if(computerHasThreeInARow()){
                 // check if the computer has three in a row
                 // if not blocked, make four
-                this.board[this.freeSpace[0]][this.freeSpace[1]] = this.computerPiece;
+                myMove = this.freeSpace;
+                return myMove;
             } else if(opponentHasThree()){
                 // check if the opponent has three in a row with a blank space on either side
                 // if so, block three
-                this.board[this.freeSpace[0]][this.freeSpace[1]] = this.computerPiece;
+                myMove = this.freeSpace;
+                return myMove;
             } else if(computerHasThree()){
                 // check if the computer has three in a set of five
                 // if not blocked, make four
-                this.board[this.freeSpace[0]][this.freeSpace[1]] = this.computerPiece;
+                myMove = this.freeSpace;
+                return myMove;
             } else if(computerHasTwo()){
                 // check if the computer has two in a set of five
                 // if not blocked, make three
-                this.board[this.freeSpace[0]][this.freeSpace[1]] = this.computerPiece;
+                myMove = this.freeSpace;
+                return myMove;
             } else if(computerHasOne()){
                 // check if the computer has one piece in a set of five
                 // if not blocked, make two
-                this.board[this.freeSpace[0]][this.freeSpace[1]] = this.computerPiece;
+                myMove = this.freeSpace;
+                return myMove;
             } else {
                 // if no other conditions were met, place in a random piece
                 // checking there are not pieces in that spot
                 // make sure there are 4 blank spaces around that piece 
-                int randomRow = random.nextInt(19);
-                int randomColumn = random.nextInt(19);
+                int randomRow = random.nextInt(20);
+                int randomColumn = random.nextInt(20);
                 while(!isEmptySetOfFive(randomRow, randomColumn)){
-                    randomRow = random.nextInt(19);
-                    randomColumn = random.nextInt(19);
+                    randomRow = random.nextInt(20);
+                    randomColumn = random.nextInt(20);
                 }   
-                this.board[randomRow][randomColumn] = this.computerPiece;
+                myMove = this.freeSpace;
+                return myMove;
             }
         }
 
