@@ -1,6 +1,6 @@
 import java.util.Random;
 
-class ConnectFive implements FinalProject{
+class FritzFP implements FinalProject{
 
     // Private Variables
         private Random random = new Random();
@@ -23,56 +23,60 @@ class ConnectFive implements FinalProject{
                 this.opponentPiece = 'O';
             }
             
-    
             if(computerCanWin()){
                 // check if the computer has four in a row
                 // if so, take win
                 myMove = this.freeSpace;
-                return myMove;
             } else if(opponentCanWin()){
                 // block win
                 // if the player has four uninterupted pieces, only block if one side is already blocked 
                 // if the pieces are interrupted block within the interuption
                 myMove = this.freeSpace;
-                return myMove;
             } else if(computerHasThreeInARow()){
                 // check if the computer has three in a row
                 // if not blocked, make four
                 myMove = this.freeSpace;
-                return myMove;
             } else if(opponentHasThree()){
                 // check if the opponent has three in a row with a blank space on either side
                 // if so, block three
                 myMove = this.freeSpace;
-                return myMove;
             } else if(computerHasThree()){
                 // check if the computer has three in a set of five
                 // if not blocked, make four
                 myMove = this.freeSpace;
-                return myMove;
             } else if(computerHasTwo()){
                 // check if the computer has two in a set of five
                 // if not blocked, make three
                 myMove = this.freeSpace;
-                return myMove;
             } else if(computerHasOne()){
                 // check if the computer has one piece in a set of five
                 // if not blocked, make two
                 myMove = this.freeSpace;
-                return myMove;
             } else {
-                // if no other conditions were met, place in a random piece
+                // if no other conditions were met, place a random piece
                 // checking there are not pieces in that spot
-                // make sure there are 4 blank spaces around that piece 
+                // if there is a space with 4 blank spaces around it then choose that space 
+                for(int i = 0; i < 20; i++){
+                    for(int j = 0; j < 20; j++){
+                        if(isEmptySetOfFive(i, j)){
+                            myMove[0] = i;
+                            myMove[1] = j;
+                            return myMove;
+                        }
+                    }
+                }
+                
+                // otherwise choose a random empty space
                 int randomRow = random.nextInt(20);
                 int randomColumn = random.nextInt(20);
-                while(!isEmptySetOfFive(randomRow, randomColumn)){
+                while(this.board[randomRow][randomColumn] != '.'){
                     randomRow = random.nextInt(20);
                     randomColumn = random.nextInt(20);
                 }   
-                myMove = this.freeSpace;
-                return myMove;
+                myMove[0] = randomRow;
+                myMove[1] = randomColumn;
             }
+            return myMove;
         }
         
         public int[] playLongGame(char[][] b, int player) {
@@ -87,63 +91,83 @@ class ConnectFive implements FinalProject{
                 this.opponentPiece = 'O';
             }
         
+            // for the long game we should probably check if the computer has five in a row
+            // and intersect with that
             if(computerCanWin()){
                 // check if the computer has four in a row
                 // if so, take win
                 myMove = this.freeSpace;
-                return myMove;
             } else if(opponentCanWin()){
                 // block win
                 // if the player has four uninterupted pieces, only block if one side is already blocked 
                 // if the pieces are interrupted block within the interuption
                 myMove = this.freeSpace;
-                return myMove;
             } else if(computerHasThreeInARow()){
                 // check if the computer has three in a row
                 // if not blocked, make four
                 myMove = this.freeSpace;
-                return myMove;
             } else if(opponentHasThree()){
                 // check if the opponent has three in a row with a blank space on either side
                 // if so, block three
                 myMove = this.freeSpace;
-                return myMove;
             } else if(computerHasThree()){
                 // check if the computer has three in a set of five
                 // if not blocked, make four
                 myMove = this.freeSpace;
-                return myMove;
             } else if(computerHasTwo()){
                 // check if the computer has two in a set of five
                 // if not blocked, make three
                 myMove = this.freeSpace;
-                return myMove;
             } else if(computerHasOne()){
                 // check if the computer has one piece in a set of five
                 // if not blocked, make two
                 myMove = this.freeSpace;
-                return myMove;
             } else {
-                // if no other conditions were met, place in a random piece
+                // if no other conditions were met, place a random piece
                 // checking there are not pieces in that spot
-                // make sure there are 4 blank spaces around that piece 
+                // if there is a space with 4 blank spaces around it then choose that space 
+                for(int i = 0; i < 20; i++){
+                    for(int j = 0; j < 20; j++){
+                        if(isEmptySetOfFive(i, j)){
+                            myMove[0] = i;
+                            myMove[1] = j;
+                            return myMove;
+                        }
+                    }
+                }
+                
+                // otherwise choose a random empty space
                 int randomRow = random.nextInt(20);
                 int randomColumn = random.nextInt(20);
-                while(!isEmptySetOfFive(randomRow, randomColumn)){
+                while(this.board[randomRow][randomColumn] != '.'){
                     randomRow = random.nextInt(20);
                     randomColumn = random.nextInt(20);
                 }   
-                myMove = this.freeSpace;
-                return myMove;
+                myMove[0] = randomRow;
+                myMove[1] = randomColumn;
             }
+            return myMove;
         }
 
-        public boolean isShortGameOver(char[][] b){
-            return false;
+        public int isShortGameOver(char[][] b){
+            this.board = b;
+
+            if(findRowOfN(5, 'X') || findColumnOfN(5, "X") || findDiagonalDownOfN(5, 'X') || findDiagonalUpOfN(5, 'X')){ // check if the computer won
+                return 1;
+            } else if(findRowOfN(5, 'O') || findColumnOfN(5, 'O') || findDiagonalDownOfN(5, 'O') || findDiagonalUpOfN(5, 'O')){ // check if the opponent won
+                return 2;
+            } else if(fullBoard()){ // check if there are no moves left
+                return 0;
+            } else { 
+                return 0;
+            }  
         }
 
         public boolean isLongGameOver(char[][] b){
-            return false;
+            this.board = b;
+            if(fullBoard()){
+                return determineLongWinner();
+            }
         }
         
     // Private Methods
@@ -298,23 +322,23 @@ class ConnectFive implements FinalProject{
         for(int i = 0; i < 20; i++){
             if(n == 5 && numInRow == n){ // win condition
                 return true;
-            } else if(i > 3 && n == 3 && numInRow == n && row[i] == '-' && row[i-4] == '-'){ // 3 in a row with a free space on both sides
+            } else if(i > 3 && n == 3 && numInRow == n && row[i] == '.' && row[i-4] == '.'){ // 3 in a row with a free space on both sides
                 if(random.nextInt(2) == 0){
                     this.freeSpace[1] = i;
                 } else {
                     this.freeSpace[1] = i-(n+1);
                 }
                 return true;
-            } else if(i == 4 && n == 4 && numInRow == n && row[i] == '-'){ // four in a row with a free space to the right, left is the wall
+            } else if(i == 4 && n == 4 && numInRow == n && row[i] == '.'){ // four in a row with a free space to the right, left is the wall
                 this.freeSpace[1] = i;
                 return true;
-            } else if(i == 18 && n == 4 && numInRow == 3 && row[i] == piece && row[i-4] == '-'){ // four in a row with a free space to the left, right is wall
+            } else if(i == 18 && n == 4 && numInRow == 3 && row[i] == piece && row[i-4] == '.'){ // four in a row with a free space to the left, right is wall
                 this.freeSpace[1] = i-4;
                 return true;
-            } else if(i > 4 && n == 4 && numInRow == n && row[i] == '-' && row[i-5] == opposingPiece){ // four in a row with a free space to the right, left is blocked
+            } else if(i > 4 && n == 4 && numInRow == n && row[i] == '.' && row[i-5] == opposingPiece){ // four in a row with a free space to the right, left is blocked
                 this.freeSpace[1] = i;
                 return true;
-            } else if(i > 4 && n == 4 && numInRow == n && row[i] == opposingPiece && row[i-5] == '-'){ // four in a row with a free space to the left, right is blocked
+            } else if(i > 4 && n == 4 && numInRow == n && row[i] == opposingPiece && row[i-5] == '.'){ // four in a row with a free space to the left, right is blocked
                 this.freeSpace[1] = i-5;
                 return true;
             } else if(row[i] == piece){
@@ -358,23 +382,23 @@ class ConnectFive implements FinalProject{
         for(int i = 0; i < 19; i++){
             if(n == 5 && numInColumn == n){ // win condition
                 return true;
-            } else if(i > 3 && n == 3 && numInColumn == n && column[i] == '-' && column[i-4] == '-'){ // 3 in a column with a free space on both sides
+            } else if(i > 3 && n == 3 && numInColumn == n && column[i] == '.' && column[i-4] == '.'){ // 3 in a column with a free space on both sides
                 if(random.nextInt(2) == 0){
                     this.freeSpace[0] = i;
                 } else {
                     this.freeSpace[0] = i-(n+1);
                 }
                 return true;
-            } else if(i == 4 && n == 4 && numInColumn == n && column[i] == '-'){ // 4 in a column with a free space on the bottom, the top is the wall
+            } else if(i == 4 && n == 4 && numInColumn == n && column[i] == '.'){ // 4 in a column with a free space on the bottom, the top is the wall
                 this.freeSpace[0] = i;
                 return true;
-            } else if(i == 19 && n == 4 && numInColumn == 3 && column[i] == piece && column[i-4] == '-'){ // 4 in a column with a free space on the top, the bottom is the wall
+            } else if(i == 19 && n == 4 && numInColumn == 3 && column[i] == piece && column[i-4] == '.'){ // 4 in a column with a free space on the top, the bottom is the wall
                 this.freeSpace[0] = i-4;
                 return true;
-            } else if(i > 4 && n == 4 && numInColumn == n && column[i] == '-' && column[i-5] == opposingPiece){ // 4 in a column with a free space on the bottom, the top the opposing piece
+            } else if(i > 4 && n == 4 && numInColumn == n && column[i] == '.' && column[i-5] == opposingPiece){ // 4 in a column with a free space on the bottom, the top the opposing piece
                 this.freeSpace[0] = i;
                 return true;
-            } else if(i > 4 && n == 4 && numInColumn == n && column[i] == opposingPiece && column[i-5] == '-'){ // 4 in a column with a free space on the top and an opposing piece on bottom
+            } else if(i > 4 && n == 4 && numInColumn == n && column[i] == opposingPiece && column[i-5] == '.'){ // 4 in a column with a free space on the top and an opposing piece on bottom
                 this.freeSpace[0] = i-5;
                 return true;
             }  else if(column[i] == piece){
@@ -470,7 +494,7 @@ class ConnectFive implements FinalProject{
         for(int i = 0; i < diagonal.length; i++){
             if(n == 5 && numInDiagonal == n){ // win condition
                 return true;
-            } else if(i > 3 && n == 3 && numInDiagonal == n && diagonal[i] == '-' && diagonal[i-4] == '-'){ // 3 in a downward diagonal with a free space on both sides
+            } else if(i > 3 && n == 3 && numInDiagonal == n && diagonal[i] == '.' && diagonal[i-4] == '.'){ // 3 in a downward diagonal with a free space on both sides
                 if(random.nextInt(2) == 0){
                     this.freeSpace[0] = rowIdx+i;
                     this.freeSpace[1] = columnIdx+i;
@@ -479,19 +503,19 @@ class ConnectFive implements FinalProject{
                     this.freeSpace[1] = columnIdx+i-4;
                 }
                 return true;
-            } else if(i == 4 && n == 4 && numInDiagonal == n && diagonal[i] == '-'){ // 4 in a diagonal with a free space on the bottom right, top left is the wall
+            } else if(i == 4 && n == 4 && numInDiagonal == n && diagonal[i] == '.'){ // 4 in a diagonal with a free space on the bottom right, top left is the wall
                 this.freeSpace[0] = rowIdx+i;
                 this.freeSpace[1] = columnIdx+i;
                 return true;
-            } else if(i > 4 && n == 4 && numInDiagonal == n && diagonal[i] == '-' && diagonal[i-5] == opposingPiece){ // 4 in a diagonal with a free space on the bottom right, top left is blocked
+            } else if(i > 4 && n == 4 && numInDiagonal == n && diagonal[i] == '.' && diagonal[i-5] == opposingPiece){ // 4 in a diagonal with a free space on the bottom right, top left is blocked
                 this.freeSpace[0] = rowIdx+i;
                 this.freeSpace[1] = columnIdx+i;
                 return true;
-            } else if(i == diagonal.length-1 && n == 4 && numInDiagonal == 3 && diagonal[i] == piece && diagonal[i-4] == '-'){ // 4 in a downward diagonal with a free space on the top left, bottom right is the wall
+            } else if(i == diagonal.length-1 && n == 4 && numInDiagonal == 3 && diagonal[i] == piece && diagonal[i-4] == '.'){ // 4 in a downward diagonal with a free space on the top left, bottom right is the wall
                 this.freeSpace[0] = rowIdx+i-4;
                 this.freeSpace[1] = columnIdx+i-4;
                 return true;
-            } else if(i > 4 && n == 4 && numInDiagonal == n && diagonal[i] == opposingPiece && diagonal[i-5] == '-'){ // 4 in a downward diagonal with a free space on the top left, bottom right is blocked
+            } else if(i > 4 && n == 4 && numInDiagonal == n && diagonal[i] == opposingPiece && diagonal[i-5] == '.'){ // 4 in a downward diagonal with a free space on the top left, bottom right is blocked
                 this.freeSpace[0] = rowIdx+i-5;
                 this.freeSpace[1] = columnIdx+i-5;
                 return true;
@@ -588,7 +612,7 @@ class ConnectFive implements FinalProject{
         for(int i = 0; i < diagonal.length; i++){
             if(n == 5 && numInDiagonal == n){ // win condition
                 return true;
-            } else if(i > 3 && n == 3 && numInDiagonal == n && diagonal[i] == '-' && diagonal[i-4] == '-'){ // 3 in a upward diagonal with a free space on both sides
+            } else if(i > 3 && n == 3 && numInDiagonal == n && diagonal[i] == '.' && diagonal[i-4] == '.'){ // 3 in a upward diagonal with a free space on both sides
                 if(random.nextInt(2) == 0){
                     this.freeSpace[0] = rowIdx-i;
                     this.freeSpace[1] = columnIdx+i;
@@ -597,11 +621,11 @@ class ConnectFive implements FinalProject{
                     this.freeSpace[1] = columnIdx+(i-4);
                 }
                 return true;
-            } else if(i == 4 && n == 4 && numInDiagonal == n && diagonal[i] == '-'){ // 4 in a diagonal with a free space on the top right, bottom left is the wall
+            } else if(i == 4 && n == 4 && numInDiagonal == n && diagonal[i] == '.'){ // 4 in a diagonal with a free space on the top right, bottom left is the wall
                 this.freeSpace[0] = rowIdx-i;
                 this.freeSpace[1] = columnIdx+i;
                 return true;
-            } else if(i > 4 && n == 4 && numInDiagonal == n && diagonal[i] == '-' && diagonal[i-5] == opposingPiece){ // 4 in a diagonal with a free space on the top right, bottom left is blocked
+            } else if(i > 4 && n == 4 && numInDiagonal == n && diagonal[i] == '.' && diagonal[i-5] == opposingPiece){ // 4 in a diagonal with a free space on the top right, bottom left is blocked
                 this.freeSpace[0] = rowIdx-i;
                 this.freeSpace[1] = columnIdx+i;
                 return true;
@@ -609,7 +633,7 @@ class ConnectFive implements FinalProject{
                 this.freeSpace[0] = rowIdx-(i-4);
                 this.freeSpace[1] = columnIdx+(i-4);
                 return true;
-            } else if(i > 4 && n == 4 && numInDiagonal == n && diagonal[i] == opposingPiece && diagonal[i-5] == '-'){ // 4 in a downward diagonal with a free space on the bottom left, top right is blocked
+            } else if(i > 4 && n == 4 && numInDiagonal == n && diagonal[i] == opposingPiece && diagonal[i-5] == '.'){ // 4 in a downward diagonal with a free space on the bottom left, top right is blocked
                 this.freeSpace[0] = rowIdx-(i-5);
                 this.freeSpace[1] = columnIdx+(i-5);
                 return true;
@@ -632,19 +656,19 @@ class ConnectFive implements FinalProject{
                 this.freeSpace[0] = j;
 
                 for(int i = 0; i < 15; i++){
-                    if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario OO-OO
+                    if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario OO-OO
                         this.freeSpace[1] = i+2;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario OOO-O
+                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario OOO-O
                         this.freeSpace[1] = i+3;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario O-OOO
+                    } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario O-OOO
                         this.freeSpace[1] = i+1;
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario -OOOO
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario -OOOO
                         this.freeSpace[1] = i;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario OOOO-
+                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario OOOO-
                         this.freeSpace[1] = i+4;
                         return true;
                     }
@@ -657,19 +681,19 @@ class ConnectFive implements FinalProject{
                 this.freeSpace[1] = j;
 
                 for(int i = 0; i < 15; i++){
-                    if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario OO-OO
+                    if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario OO-OO
                         this.freeSpace[0] = i+2;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario OOO-O
+                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario OOO-O
                         this.freeSpace[0] = i+3;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario O-OOO
+                    } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario O-OOO
                         this.freeSpace[0] = i+1;
                         return true;
-                    }  else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario -OOOO
+                    }  else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario -OOOO
                         this.freeSpace[0] = i;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario OOOO-
+                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario OOOO-
                         this.freeSpace[0] = i+4;
                         return true;
                     }
@@ -689,23 +713,23 @@ class ConnectFive implements FinalProject{
                 }
 
                 for(int i = 0; i < fullSet.length-5; i++){ 
-                    if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario OO-OO
+                    if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario OO-OO
                         this.freeSpace[0] = rowIdx+i+2;
                         this.freeSpace[1] = columnIdx+i+2;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario OOO-O
+                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario OOO-O
                         this.freeSpace[0] = rowIdx+i+3;
                         this.freeSpace[1] = columnIdx+i+3;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario O-OOO
+                    } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario O-OOO
                         this.freeSpace[0] = rowIdx+i+1;
                         this.freeSpace[1] = columnIdx+i+1;
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario -OOOO
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario -OOOO
                         this.freeSpace[0] = rowIdx+i;
                         this.freeSpace[1] = columnIdx+i;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario OOOO-
+                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario OOOO-
                         this.freeSpace[0] = rowIdx+i+4;
                         this.freeSpace[1] = columnIdx+i+4;
                         return true;
@@ -726,23 +750,23 @@ class ConnectFive implements FinalProject{
                 }
 
                 for(int i = 0; i < fullSet.length-5; i++){ 
-                    if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario OO-OO
+                    if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario OO-OO
                         this.freeSpace[0] = rowIdx-(i-2);
                         this.freeSpace[1] = columnIdx+i+2;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario OOO-O
+                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario OOO-O
                         this.freeSpace[0] = rowIdx-(i-3);
                         this.freeSpace[1] = columnIdx+i+3;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario O-OOO
+                    } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario O-OOO
                         this.freeSpace[0] = rowIdx-(i-1);
                         this.freeSpace[1] = columnIdx+i+1;
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario -OOOO
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario -OOOO
                         this.freeSpace[0] = rowIdx-i;
                         this.freeSpace[1] = columnIdx+i;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario OOOO-
+                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario OOOO-
                         this.freeSpace[0] = rowIdx-(i-4);
                         this.freeSpace[1] = columnIdx+i+4;
                         return true;
@@ -765,46 +789,46 @@ class ConnectFive implements FinalProject{
                 this.freeSpace[0] = j;
 
                 for(int i = 0; i < 15; i++){
-                    if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario O-O-O
+                    if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario O-O-O
                         if(random.nextInt(2) == 0){
                             this.freeSpace[1] = i+1;
                         } else {
                             this.freeSpace[1] = i+3;
                         }
                         return true;
-                    } else if(piece == 'O' && fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario OOO--
+                    } else if(piece == this.computerPiece && fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario OOO--
                         this.freeSpace[1] = i+3;
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario -OOO-
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario -OOO-
                         if(random.nextInt(2) == 0){
                             this.freeSpace[1] = i;
                         } else {
                             this.freeSpace[1] = i+4;
                         }
                         return true;
-                    } else if(piece == 'O' && fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario --OOO
+                    } else if(piece == this.computerPiece && fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario --OOO
                         this.freeSpace[1] = i+1;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario O-OO-
+                    } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario O-OO-
                         this.freeSpace[1] = i+1;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario OO-O-
+                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario OO-O-
                         this.freeSpace[1] = i+2;
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario -O-OO,
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario -O-OO,
                         this.freeSpace[1] = i+2;
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario -OO-O
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario -OO-O
                         this.freeSpace[1] = i+3;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario O--OO,
+                    } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario O--OO,
                         if(random.nextInt(2) == 0){
                             this.freeSpace[1] = i+1;
                         } else {
                             this.freeSpace[1] = i+2;
                         }
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario OO--O
+                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario OO--O
                         if(random.nextInt(2) == 0){
                             this.freeSpace[1] = i+2;
                         } else {
@@ -821,46 +845,46 @@ class ConnectFive implements FinalProject{
                 this.freeSpace[1] = j;
 
                 for(int i = 0; i < 15; i++){
-                    if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario O-O-O
+                    if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario O-O-O
                         if(random.nextInt(2) == 0){
                             this.freeSpace[0] = i+1;
                         } else {
                             this.freeSpace[0] = i+3;
                         }
                         return true;
-                    } else if(piece == 'O' && fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario OOO--
+                    } else if(piece == this.computerPiece && fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario OOO--
                         this.freeSpace[0] = i+3;
                         return true;
-                    } else if(piece == 'O' && fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario -OOO-
+                    } else if(piece == this.computerPiece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario -OOO-
                         if(random.nextInt(2) == 0){
                             this.freeSpace[0] = i;
                         } else {
                             this.freeSpace[0] = i+4;
                         }
                         return true;
-                    } else if(piece == 'O' && fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario --OOO
+                    } else if(piece == this.computerPiece && fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario --OOO
                         this.freeSpace[0] = i+1;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario O-OO-
+                    } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario O-OO-
                         this.freeSpace[0] = i+1;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario OO-O-
+                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario OO-O-
                         this.freeSpace[0] = i+2;
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario -O-OO,
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario -O-OO,
                         this.freeSpace[0] = i+2;
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario -OO-O
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario -OO-O
                         this.freeSpace[0] = i+3;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario O--OO
+                    } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario O--OO
                         if(random.nextInt(2) == 0){
                             this.freeSpace[0] = i+1;
                         } else {
                             this.freeSpace[0] = i+2;
                         }
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario OO--O
+                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario OO--O
                         if(random.nextInt(2) == 0){
                             this.freeSpace[0] = i+3;
                         } else {
@@ -884,7 +908,7 @@ class ConnectFive implements FinalProject{
                 }
 
                 for(int i = 0; i < fullSet.length-5; i++){ 
-                    if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario O-O-O
+                    if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario O-O-O
                         if(random.nextInt(2) == 0){
                             this.freeSpace[0] = rowIdx+i+1;
                             this.freeSpace[1] = columnIdx+i+1;
@@ -893,11 +917,11 @@ class ConnectFive implements FinalProject{
                             this.freeSpace[1] = columnIdx+i+3;
                         }
                         return true;
-                    } else if(piece == 'O' && fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario OOO--
+                    } else if(piece == this.computerPiece && fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario OOO--
                         this.freeSpace[0] = rowIdx+i+4;
                         this.freeSpace[1] = columnIdx+i+4;
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario -OOO-
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario -OOO-
                         if(random.nextInt(2) == 0){
                             this.freeSpace[0] = rowIdx+i;
                             this.freeSpace[1] = columnIdx+i;
@@ -906,27 +930,27 @@ class ConnectFive implements FinalProject{
                             this.freeSpace[1] = columnIdx+i+4;
                         }
                         return true;
-                    } else if(piece == 'O' && fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario --OOO
+                    } else if(piece == this.computerPiece && fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario --OOO
                         this.freeSpace[0] = rowIdx+i+1;
                         this.freeSpace[1] = columnIdx+i+1;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario O-OO-
+                    } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario O-OO-
                         this.freeSpace[0] = rowIdx+i+1;
                         this.freeSpace[1] = columnIdx+i+1;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario OO-O-
+                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario OO-O-
                         this.freeSpace[0] = rowIdx+i+2;
                         this.freeSpace[1] = columnIdx+i+2;
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario -O-OO,
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario -O-OO,
                         this.freeSpace[0] = rowIdx+i+2;
                         this.freeSpace[1] = columnIdx+i+2;
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario -OO-O
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario -OO-O
                         this.freeSpace[0] = rowIdx+i+3;
                         this.freeSpace[1] = columnIdx+i+3;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario O--OO
+                    } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario O--OO
                         if(random.nextInt(2) == 0){
                             this.freeSpace[0] = rowIdx+i+1;
                             this.freeSpace[1] = columnIdx+i+1;
@@ -935,7 +959,7 @@ class ConnectFive implements FinalProject{
                             this.freeSpace[1] = columnIdx+i+2;
                         }
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario OO--O
+                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario OO--O
                         if(random.nextInt(2) == 0){
                             this.freeSpace[0] = rowIdx+i+2;
                             this.freeSpace[1] = columnIdx+2;
@@ -961,7 +985,7 @@ class ConnectFive implements FinalProject{
                 }
 
                 for(int i = 0; i < fullSet.length-5; i++){ 
-                    if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario O-O-O
+                    if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario O-O-O
                         if(random.nextInt(2) == 0){
                             this.freeSpace[0] = rowIdx-(i-1);
                             this.freeSpace[1] = columnIdx+i+1;
@@ -970,11 +994,11 @@ class ConnectFive implements FinalProject{
                             this.freeSpace[1] = columnIdx+i+3;
                         }
                         return true;
-                    } else if(piece == 'O' && fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario OOO--
+                    } else if(piece == this.computerPiece && fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario OOO--
                         this.freeSpace[0] = rowIdx-(i-3);
                         this.freeSpace[1] = columnIdx+i+3;
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario -OOO-
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario -OOO-
                         if(random.nextInt(2) == 0){
                             this.freeSpace[0] = rowIdx-i;
                             this.freeSpace[1] = columnIdx+i;
@@ -983,27 +1007,27 @@ class ConnectFive implements FinalProject{
                             this.freeSpace[1] = columnIdx+i+4;
                         }
                         return true;
-                    } else if(piece == 'O' && fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario --OOO
+                    } else if(piece == this.computerPiece && fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario --OOO
                         this.freeSpace[0] = rowIdx-(i-1);
                         this.freeSpace[1] = columnIdx+i+1;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario O-OO-
+                    } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario O-OO-
                         this.freeSpace[0] = rowIdx-(i-1);
                         this.freeSpace[1] = columnIdx+i+1;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario OO-O-
+                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario OO-O-
                         this.freeSpace[0] = rowIdx-(i-2);
                         this.freeSpace[1] = columnIdx+i+2;
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario -O-OO,
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario -O-OO,
                         this.freeSpace[0] = rowIdx-(i-2);
                         this.freeSpace[1] = columnIdx+i+2;
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario -OO-O
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario -OO-O
                         this.freeSpace[0] = rowIdx-(i-3);
                         this.freeSpace[1] = columnIdx+i+3;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario O--OO
+                    } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario O--OO
                         if(random.nextInt(2) == 0){
                             this.freeSpace[0] = rowIdx-(i-1);
                             this.freeSpace[1] = columnIdx+i+1;
@@ -1012,7 +1036,7 @@ class ConnectFive implements FinalProject{
                             this.freeSpace[1] = columnIdx+i+2;
                         }
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario OO--O
+                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario OO--O
                         if(random.nextInt(2) == 0){
                             this.freeSpace[0] = rowIdx-(i-2);
                             this.freeSpace[1] = columnIdx+i+2;
@@ -1041,16 +1065,16 @@ class ConnectFive implements FinalProject{
                     this.freeSpace[0] = j;
     
                     for(int i = 0; i < 15; i++){
-                        if(i > 0 && fullSet[i-1] == '-' && fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario OO---, making sure the left is not blocked
+                        if(i > 0 && fullSet[i-1] == '.' && fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario OO---, making sure the left is not blocked
                             this.freeSpace[1] = i+2;
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario -O-O-
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario -O-O-
                             this.freeSpace[1] = i+2;
                             return true;
-                        } else if(i > 0 && fullSet[i-1] == '-' && fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario O-O--, making sure the left is not blocked
+                        } else if(i > 0 && fullSet[i-1] == '.' && fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario O-O--, making sure the left is not blocked
                             this.freeSpace[1] = i+1;
                             return true;
-                        } else if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario O--O-
+                        } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario O--O-
                             if(randomValue == 0){
                                 this.freeSpace[1] = i+1;
                             } else if(randomValue == 1){
@@ -1059,7 +1083,7 @@ class ConnectFive implements FinalProject{
                                 this.freeSpace[1] = i+4;
                             }
                             return true;
-                        } else if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario O---O
+                        } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario O---O
                             if(randomValue == 0){
                                 this.freeSpace[1] = i+1;
                             } else if(randomValue == 1){
@@ -1068,14 +1092,14 @@ class ConnectFive implements FinalProject{
                                 this.freeSpace[1] = i+3;
                             }
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario -OO--
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario -OO--
                             if(randomValue == 1){ 
                                 this.freeSpace[1] = i;
                             } else if(randomValue == 1){
                                 this.freeSpace[1] = i+3;
                             } 
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario -O--O
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario -O--O
                             if(randomValue == 0){
                                 this.freeSpace[1] = i;
                             } else if(randomValue == 1){
@@ -1084,17 +1108,17 @@ class ConnectFive implements FinalProject{
                                 this.freeSpace[1] = i+3;
                             }
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario --OO-
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario --OO-
                             if(randomValue == 1) { 
                                 this.freeSpace[1] = i+4;
                             } else {
                                 this.freeSpace[1] = i+1;
                             } 
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario --O-O
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario --O-O
                             this.freeSpace[1] = i+3;
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '-'){ // check senario ---OO, making sure the right is not blocked
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario ---OO, making sure the right is not blocked
                             this.freeSpace[1] = i+2;
                             return true;
                         }
@@ -1107,16 +1131,16 @@ class ConnectFive implements FinalProject{
                     this.freeSpace[1] = j;
     
                     for(int i = 0; i < 15; i++){
-                        if(i > 0 && fullSet[i-1] == '-' && fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario OO---, making sure the left is not blocked
+                        if(i > 0 && fullSet[i-1] == '.' && fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario OO---, making sure the left is not blocked
                             this.freeSpace[0] = i+2;
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario -O-O-
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario -O-O-
                             this.freeSpace[0] = i+2;
                             return true;
-                        } else if(i > 0 && fullSet[i-1] == '-' && fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario O-O--, making sure the left is not blocked
+                        } else if(i > 0 && fullSet[i-1] == '.' && fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario O-O--, making sure the left is not blocked
                             this.freeSpace[0] = i+1;
                             return true;
-                        } else if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario O--O-
+                        } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario O--O-
                             if(randomValue == 0){
                                 this.freeSpace[0] = i+1;
                             } else if(randomValue == 1){
@@ -1125,7 +1149,7 @@ class ConnectFive implements FinalProject{
                                 this.freeSpace[0] = i+4;
                             }
                             return true;
-                        } else if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario O---O
+                        } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario O---O
                             if(randomValue == 0){
                                 this.freeSpace[0] = i+1;
                             } else if(randomValue == 1){
@@ -1134,14 +1158,14 @@ class ConnectFive implements FinalProject{
                                 this.freeSpace[0] = i+3;
                             }
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario -OO--
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario -OO--
                             if(randomValue == 1){ 
                                 this.freeSpace[0] = i;
                             } else {
                                 this.freeSpace[0] = i+3;
                             } 
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario -O--O
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario -O--O
                             if(randomValue == 0){
                                 this.freeSpace[0] = i;
                             } else if(randomValue == 1){
@@ -1150,17 +1174,17 @@ class ConnectFive implements FinalProject{
                                 this.freeSpace[0] = i+3;
                             }
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario --OO-
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario --OO-
                             if(randomValue == 1){ 
                                 this.freeSpace[0] = i+4;
                             } else {
                                 this.freeSpace[0] = i+1;
                             } 
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == piece && fullSet[i+5] == '-'){ // check senario --O-O, making sure the right is not blocked
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario --O-O, making sure the right is not blocked
                             this.freeSpace[0] = i+3;
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '-'){ // check senario ---OO, making sure the right is not blocked
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario ---OO, making sure the right is not blocked
                             this.freeSpace[0] = i+2;
                             return true;
                         } 
@@ -1180,19 +1204,19 @@ class ConnectFive implements FinalProject{
                     }
     
                     for(int i = 0; i < fullSet.length-5; i++){ 
-                        if(i > 0 && fullSet[i-1] == '-' && fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario OO---, making sure the left is not blocked
+                        if(i > 0 && fullSet[i-1] == '.' && fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario OO---, making sure the left is not blocked
                             this.freeSpace[0] = rowIdx+i+2;
                             this.freeSpace[1] = columnIdx+i+2;
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario -O-O-
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario -O-O-
                             this.freeSpace[0] = rowIdx+i+2;
                             this.freeSpace[1] = columnIdx+i+2;
                             return true;
-                        } else if(i > 0 && fullSet[i-1] == '-' && fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario O-O--, making sure the left is not blocked
+                        } else if(i > 0 && fullSet[i-1] == '.' && fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario O-O--, making sure the left is not blocked
                             this.freeSpace[0] = rowIdx+i+1;
                             this.freeSpace[1] = columnIdx+i+1;
                             return true;
-                        } else if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario O--O-
+                        } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario O--O-
                             if(randomValue == 0){
                                 this.freeSpace[0] = rowIdx+i+1;
                                 this.freeSpace[1] = columnIdx+i+1;
@@ -1204,7 +1228,7 @@ class ConnectFive implements FinalProject{
                                 this.freeSpace[1] = columnIdx+i+4;
                             }
                             return true;
-                        } else if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario O---O
+                        } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario O---O
                             if(randomValue == 0){
                                 this.freeSpace[0] = rowIdx+i+1;
                                 this.freeSpace[1] = columnIdx+i+1;
@@ -1216,7 +1240,7 @@ class ConnectFive implements FinalProject{
                                 this.freeSpace[1] = columnIdx+i+3;
                             }
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario -OO--
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario -OO--
                             if(randomValue == 1){ 
                                 this.freeSpace[0] = rowIdx+i;
                                 this.freeSpace[1] = columnIdx+i;
@@ -1225,7 +1249,7 @@ class ConnectFive implements FinalProject{
                                 this.freeSpace[1] = columnIdx+i+3;
                             }
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario -O--O
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario -O--O
                             if(randomValue == 0){
                                 this.freeSpace[0] = rowIdx+i;
                                 this.freeSpace[1] = columnIdx+i;
@@ -1237,7 +1261,7 @@ class ConnectFive implements FinalProject{
                                 this.freeSpace[1] = columnIdx+i+3;
                             }
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario --OO-
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario --OO-
                             if(randomValue == 1){ 
                                 this.freeSpace[0] = rowIdx+i+4;
                                 this.freeSpace[1] = columnIdx+i+4;
@@ -1246,11 +1270,11 @@ class ConnectFive implements FinalProject{
                                 this.freeSpace[1] = columnIdx+i+1;
                             } 
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == piece && fullSet[i+5] == '-'){ // check senario --O-O, making sure the right is not blocked
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario --O-O, making sure the right is not blocked
                             this.freeSpace[0] = rowIdx+i+3;
                             this.freeSpace[1] = columnIdx+i+3;
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '-'){ // check senario ---OO, making sure the right is not blocked
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario ---OO, making sure the right is not blocked
                             this.freeSpace[0] = rowIdx+i+2;
                             this.freeSpace[1] = columnIdx+i+2;
                             return true;
@@ -1271,19 +1295,19 @@ class ConnectFive implements FinalProject{
                     }
     
                     for(int i = 0; i < fullSet.length-5; i++){ 
-                        if(i > 0 && fullSet[i-1] == '-' && fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario OO---, making sure the left is not blocked
+                        if(i > 0 && fullSet[i-1] == '.' && fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario OO---, making sure the left is not blocked
                             this.freeSpace[0] = rowIdx-(i-2);
                             this.freeSpace[1] = columnIdx+i+2;
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario -O-O-
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario -O-O-
                             this.freeSpace[0] = rowIdx-(i-2);
                             this.freeSpace[1] = columnIdx+i+2;
                             return true;
-                        } else if(i > 0 && fullSet[i-1] == '-' && fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario O-O--, checking that the left is not blocked
+                        } else if(i > 0 && fullSet[i-1] == '.' && fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario O-O--, checking that the left is not blocked
                             this.freeSpace[0] = rowIdx-(i-1);
                             this.freeSpace[1] = columnIdx+i+1;
                             return true;
-                        } else if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario O--O-
+                        } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario O--O-
                             if(randomValue == 0){
                                 this.freeSpace[0] = rowIdx-(i-1);
                                 this.freeSpace[1] = columnIdx+i+1;
@@ -1295,7 +1319,7 @@ class ConnectFive implements FinalProject{
                                 this.freeSpace[1] = columnIdx+i+4;
                             }
                             return true;
-                        } else if(fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario O---O
+                        } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario O---O
                             if(randomValue == 0){
                                 this.freeSpace[0] = rowIdx-(i-1);
                                 this.freeSpace[1] = columnIdx+i+1;
@@ -1307,7 +1331,7 @@ class ConnectFive implements FinalProject{
                                 this.freeSpace[1] = columnIdx+i+3;
                             }
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario -OO--
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario -OO--
                             if(randomValue == 0){
                                 this.freeSpace[0] = rowIdx-i;
                                 this.freeSpace[1] = columnIdx+i;
@@ -1316,7 +1340,7 @@ class ConnectFive implements FinalProject{
                                 this.freeSpace[1] = columnIdx+i+3;
                             }
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == piece){ // check senario -O--O
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario -O--O
                             if(randomValue == 0){
                                 this.freeSpace[0] = rowIdx-i;
                                 this.freeSpace[1] = columnIdx+i;
@@ -1328,7 +1352,7 @@ class ConnectFive implements FinalProject{
                                 this.freeSpace[1] = columnIdx+i+3;
                             }
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario --OO-
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario --OO-
                             if(randomValue == 1){ 
                                 this.freeSpace[0] = rowIdx-(i-4);
                                 this.freeSpace[1] = columnIdx+i+4;
@@ -1337,11 +1361,11 @@ class ConnectFive implements FinalProject{
                                 this.freeSpace[1] = columnIdx+i+1;
                             }
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == piece && fullSet[i+5] == '-'){ // check senario --O-O, making sure the right is not blocked
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario --O-O, making sure the right is not blocked
                             this.freeSpace[0] = rowIdx-(i-3);
                             this.freeSpace[1] = columnIdx+i+3;
                             return true;
-                        } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '-'){ // check senario ---OO, making sure the right is not blocked
+                        } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario ---OO, making sure the right is not blocked
                             this.freeSpace[0] = rowIdx-(i-2);
                             this.freeSpace[1] = columnIdx+i+2;
                             return true;
@@ -1365,31 +1389,31 @@ class ConnectFive implements FinalProject{
                 this.freeSpace[0] = j;
 
                 for(int i = 0; i < 15; i++){
-                    if(i > 0 && fullSet[i-1] == '-' && fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario O----, making sure the left is not blocked
+                    if(i > 0 && fullSet[i-1] == '.' && fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario O----, making sure the left is not blocked
                         this.freeSpace[1] = i+1;
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario -O---
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario -O---
                         if(randomValue == 1){ 
                             this.freeSpace[1] = i;
                         } else {
                             this.freeSpace[1] = i+2;
                         }
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario --O--
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario --O--
                         if(randomValue == 1){
                             this.freeSpace[1] = i+1;
                         } else {
                             this.freeSpace[1] = i+3;
                         } 
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario ---O-
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario ---O-
                         if(randomValue == 1){ 
                             this.freeSpace[1] = i+4;
                         } else {
                             this.freeSpace[1] = i+2;
                         } 
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == piece && fullSet[i+5] == '-'){ // check senario ----O, making sure the right is not blocked
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario ----O, making sure the right is not blocked
                         this.freeSpace[1] = i+3;
                         return true;
                     } 
@@ -1402,31 +1426,31 @@ class ConnectFive implements FinalProject{
                 this.freeSpace[1] = j;
 
                 for(int i = 0; i < 15; i++){
-                    if(i > 0 && fullSet[i-1] == '-' && fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario O----, making sure the left is not blocked
+                    if(i > 0 && fullSet[i-1] == '.' && fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario O----, making sure the left is not blocked
                         this.freeSpace[0] = i+1;
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario -O---
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario -O---
                         if(randomValue == 1){ 
                             this.freeSpace[0] = i;
                         } else {
                             this.freeSpace[0] = i+2;
                         } 
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario --O--
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario --O--
                         if(randomValue == 1){
                             this.freeSpace[0] = i+1;
                         } else {
                             this.freeSpace[0] = i+3;
                         }
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario ---O-
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario ---O-
                         if(randomValue == 1){ 
                             this.freeSpace[0] = i+4;
                         } else {
                             this.freeSpace[0] = i+2;
                         } 
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == piece && fullSet[i+5] == '-'){ // check senario ----O, making sure the right is not blocked
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario ----O, making sure the right is not blocked
                         this.freeSpace[0] = i+3;
                         return true;
                     }  
@@ -1446,11 +1470,11 @@ class ConnectFive implements FinalProject{
                 }
 
                 for(int i = 0; i < fullSet.length-5; i++){ 
-                    if(i > 0 && fullSet[i-1] == '-' && fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario O----, making sure the left is not blocked
+                    if(i > 0 && fullSet[i-1] == '.' && fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario O----, making sure the left is not blocked
                         this.freeSpace[0] = rowIdx+i+1;
                         this.freeSpace[1] = columnIdx+i+1;
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario -O---
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario -O---
                         if(randomValue == 1){ 
                             this.freeSpace[0] = rowIdx+i;
                             this.freeSpace[1] = columnIdx;
@@ -1459,7 +1483,7 @@ class ConnectFive implements FinalProject{
                             this.freeSpace[1] = columnIdx+i+2;
                         }  
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario --O--
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario --O--
                         if(randomValue == 1){
                             this.freeSpace[0] = rowIdx+i+1;
                             this.freeSpace[1] = columnIdx+i+1;
@@ -1468,7 +1492,7 @@ class ConnectFive implements FinalProject{
                             this.freeSpace[1] = columnIdx+i+3;
                         } 
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario ---O-
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario ---O-
                         if(randomValue == 1){ 
                             this.freeSpace[0] = rowIdx+i+4;
                             this.freeSpace[1] = columnIdx+i+4;
@@ -1477,7 +1501,7 @@ class ConnectFive implements FinalProject{
                             this.freeSpace[1] = columnIdx+i+2;
                         }  
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == piece && fullSet[i+5] == '-'){ // check senario ----O, making sure the right is not blocked
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario ----O, making sure the right is not blocked
                         this.freeSpace[0] = rowIdx+i+3;
                         this.freeSpace[1] = columnIdx+i+3;
                         return true;
@@ -1498,11 +1522,11 @@ class ConnectFive implements FinalProject{
                 }
 
                 for(int i = 0; i < fullSet.length-5; i++){ 
-                    if(i > 0 && fullSet[i-1] == '-' && fullSet[i] == piece && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario O----, making sure the left is not blocked
+                    if(i > 0 && fullSet[i-1] == '.' && fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario O----, making sure the left is not blocked
                         this.freeSpace[0] = rowIdx-(i-1);
                         this.freeSpace[1] = columnIdx+i+1;
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == piece && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario -O---
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario -O---
                         if(randomValue == 1){ 
                             this.freeSpace[0] = rowIdx-i;
                             this.freeSpace[1] = columnIdx+i;
@@ -1511,7 +1535,7 @@ class ConnectFive implements FinalProject{
                             this.freeSpace[1] = columnIdx+i+2;
                         } 
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == piece && fullSet[i+3] == '-' && fullSet[i+4] == '-'){ // check senario --O--
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario --O--
                         if(randomValue == 1){
                             this.freeSpace[0] = rowIdx-(i-1);
                             this.freeSpace[1] = columnIdx+i+1;
@@ -1520,7 +1544,7 @@ class ConnectFive implements FinalProject{
                             this.freeSpace[1] = columnIdx+i+3;
                         } 
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == piece && fullSet[i+4] == '-'){ // check senario ---O-
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario ---O-
                         if(randomValue == 1){ 
                             this.freeSpace[0] = rowIdx-(i-4);
                             this.freeSpace[1] = columnIdx+i+4;
@@ -1529,7 +1553,7 @@ class ConnectFive implements FinalProject{
                             this.freeSpace[1] = columnIdx+i+2;
                         }
                         return true;
-                    } else if(fullSet[i] == '-' && fullSet[i+1] == '-' && fullSet[i+2] == '-' && fullSet[i+3] == '-' && fullSet[i+4] == piece && fullSet[i+5] == '-'){ // check senario ----O, making sure the right is not blocked
+                    } else if(fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario ----O, making sure the right is not blocked
                         this.freeSpace[0] = rowIdx-(i-3);
                         this.freeSpace[1] = columnIdx+i+3;
                         return true;
@@ -1545,48 +1569,162 @@ class ConnectFive implements FinalProject{
     private boolean isEmptySetOfFive(int row, int column){ 
         if(this.board[row][column] == 'X' || this.board[row][column] == 'O'){
             return false;
-        } else if(row < 16 && this.board[row+1][column] == '-' && this.board[row+2][column] == '-' && this.board[row+3][column] == '-' && this.board[row+4][column] == '-'){ // row: checking for four empty spots after the piece
+        } else if(row < 16 && this.board[row+1][column] == '.' && this.board[row+2][column] == '.' && this.board[row+3][column] == '.' && this.board[row+4][column] == '.'){ // row: checking for four empty spots after the piece
             return true;
-        } else if(column < 16 && this.board[row][column+1] == '-' && this.board[row][column+2] == '-' && this.board[row][column+3] == '-' && this.board[row][column+4] == '-'){ // column: checking for four empty spots after the piece
+        } else if(column < 16 && this.board[row][column+1] == '.' && this.board[row][column+2] == '.' && this.board[row][column+3] == '.' && this.board[row][column+4] == '.'){ // column: checking for four empty spots after the piece
             return true;
-        } else if(row < 16 && column < 16 && this.board[row+1][column+1] == '-' && this.board[row+2][column+2] == '-' && this.board[row+3][column+3] == '-' && this.board[row+4][column+4] == '-'){ // diagonalUp: checking for four empty spots after the piece
+        } else if(row < 16 && column < 16 && this.board[row+1][column+1] == '.' && this.board[row+2][column+2] == '.' && this.board[row+3][column+3] == '.' && this.board[row+4][column+4] == '.'){ // diagonalUp: checking for four empty spots after the piece
             return true;
-        } else if(row > 3 && column < 16 && this.board[row-1][column+1] == '-' && this.board[row-2][column+2] == '-' && this.board[row-3][column+3] == '-' && this.board[row-4][column+4] == '-'){ // diagonalDown: checking for four empty spots after the piece
+        } else if(row > 3 && column < 16 && this.board[row-1][column+1] == '.' && this.board[row-2][column+2] == '.' && this.board[row-3][column+3] == '.' && this.board[row-4][column+4] == '.'){ // diagonalDown: checking for four empty spots after the piece
             return true;
-        } else if(row > 0 && row < 17 && this.board[row-1][column] == '-' && this.board[row+1][column] == '-' && this.board[row+2][column] == '-' && this.board[row+3][column] == '-'){ // row: checking for one empty spot before and three empty spots after the piece
+        } else if(row > 0 && row < 17 && this.board[row-1][column] == '.' && this.board[row+1][column] == '.' && this.board[row+2][column] == '.' && this.board[row+3][column] == '.'){ // row: checking for one empty spot before and three empty spots after the piece
             return true;
-        } else if(column > 0 && column < 17 && this.board[row][column-1] == '-' && this.board[row][column+1] == '-' && this.board[row][column+2] == '-' && this.board[row][column+3] == '-'){ // column: checking for one empty spot before and three empty spots after the piece
+        } else if(column > 0 && column < 17 && this.board[row][column-1] == '.' && this.board[row][column+1] == '.' && this.board[row][column+2] == '.' && this.board[row][column+3] == '.'){ // column: checking for one empty spot before and three empty spots after the piece
             return true;
-        } else if(row > 0 && row < 17 && column > 0 && column < 17 && this.board[row-1][column-1] == '-' && this.board[row+1][column+1] == '-' && this.board[row+2][column+2] == '-' && this.board[row+3][column+3] == '-'){ // diagonalUp: checking one empty spot before and three empty spots after the piece
+        } else if(row > 0 && row < 17 && column > 0 && column < 17 && this.board[row-1][column-1] == '.' && this.board[row+1][column+1] == '.' && this.board[row+2][column+2] == '.' && this.board[row+3][column+3] == '.'){ // diagonalUp: checking one empty spot before and three empty spots after the piece
             return true;
-        } else if(row > 2 && row < 17 && column > 0 && column < 17 && this.board[row+1][column-1] == '-' && this.board[row-1][column+1] == '-' && this.board[row-2][column+2] == '-' && this.board[row-3][column+3] == '-'){ // diagonalDown: checking one empty spot before and three empty spots after the piece
+        } else if(row > 2 && row < 17 && column > 0 && column < 17 && this.board[row+1][column-1] == '.' && this.board[row-1][column+1] == '.' && this.board[row-2][column+2] == '.' && this.board[row-3][column+3] == '.'){ // diagonalDown: checking one empty spot before and three empty spots after the piece
             return true;
-        } else if(row > 1 && row < 18 && this.board[row-2][column] == '-' && this.board[row-1][column] == '-' && this.board[row+1][column] == '-' && this.board[row+2][column] == '-'){ // row: checking for two empty spots before and two empty spots after the piece
+        } else if(row > 1 && row < 18 && this.board[row-2][column] == '.' && this.board[row-1][column] == '.' && this.board[row+1][column] == '.' && this.board[row+2][column] == '.'){ // row: checking for two empty spots before and two empty spots after the piece
             return true;
-        } else if(column > 1 && column < 18 && this.board[row][column-2] == '-' && this.board[row][column-1] == '-' && this.board[row][column+1] == '-' && this.board[row][column+2] == '-'){ // column: checking for two empty spots before and two empty spots after the piece
+        } else if(column > 1 && column < 18 && this.board[row][column-2] == '.' && this.board[row][column-1] == '.' && this.board[row][column+1] == '.' && this.board[row][column+2] == '.'){ // column: checking for two empty spots before and two empty spots after the piece
             return true;
-        } else if(row > 1 && row < 18 && column > 1 && column < 18 && this.board[row-2][column-2] == '-' && this.board[row-1][column-1] == '-' && this.board[row+1][column+1] == '-' && this.board[row+2][column+2] == '-'){ // diagonalUp: checking for two empty spots before and two empty spots after the piece
+        } else if(row > 1 && row < 18 && column > 1 && column < 18 && this.board[row-2][column-2] == '.' && this.board[row-1][column-1] == '.' && this.board[row+1][column+1] == '.' && this.board[row+2][column+2] == '.'){ // diagonalUp: checking for two empty spots before and two empty spots after the piece
             return true;
-        } else if(row > 1 && row < 18 && column > 1 && column < 18 && this.board[row+2][column-2] == '-' && this.board[row+1][column-1] == '-' && this.board[row-1][column+1] == '-' && this.board[row-2][column+2] == '-'){ // diagonalDown: checking for two empty spots before and two empty spots after the piece
+        } else if(row > 1 && row < 18 && column > 1 && column < 18 && this.board[row+2][column-2] == '.' && this.board[row+1][column-1] == '.' && this.board[row-1][column+1] == '.' && this.board[row-2][column+2] == '.'){ // diagonalDown: checking for two empty spots before and two empty spots after the piece
             return true;
-        } else if(row > 2 && row < 19 && this.board[row-3][column] == '-' && this.board[row-2][column] == '-' && this.board[row-1][column] == '-' && this.board[row+1][column] == '-'){ // row: checking for three empty spots before and one empty spot after the piece
+        } else if(row > 2 && row < 19 && this.board[row-3][column] == '.' && this.board[row-2][column] == '.' && this.board[row-1][column] == '.' && this.board[row+1][column] == '.'){ // row: checking for three empty spots before and one empty spot after the piece
             return true;
-        } else if(column > 2 && column < 19 && this.board[row][column-3] == '-' && this.board[row][column-2] == '-' && this.board[row][column-1] == '-' && this.board[row][column+1] == '-'){ // column: checking for three empty spots before and one empty spot after the piece
+        } else if(column > 2 && column < 19 && this.board[row][column-3] == '.' && this.board[row][column-2] == '.' && this.board[row][column-1] == '.' && this.board[row][column+1] == '.'){ // column: checking for three empty spots before and one empty spot after the piece
             return true;
-        } else if(row > 2 && row < 19 && column > 2 && column < 19 && this.board[row-3][column-3] == '-' && this.board[row-2][column-2] == '-' && this.board[row-1][column-1] == '-' && this.board[row+1][column+1] == '-'){ // diagonalUp: checking for three empty spots before and one empty spot after the piece
+        } else if(row > 2 && row < 19 && column > 2 && column < 19 && this.board[row-3][column-3] == '.' && this.board[row-2][column-2] == '.' && this.board[row-1][column-1] == '.' && this.board[row+1][column+1] == '.'){ // diagonalUp: checking for three empty spots before and one empty spot after the piece
             return true;
-        } else if(row > 0 && row < 17 && column > 2 && column < 19 && this.board[row+3][column-3] == '-' && this.board[row+2][column-2] == '-' && this.board[row+1][column-1] == '-' && this.board[row-1][column+1] == '-'){ // diagonalDown: checking for three empty spots before and one empty spot after the piece
+        } else if(row > 0 && row < 17 && column > 2 && column < 19 && this.board[row+3][column-3] == '.' && this.board[row+2][column-2] == '.' && this.board[row+1][column-1] == '.' && this.board[row-1][column+1] == '.'){ // diagonalDown: checking for three empty spots before and one empty spot after the piece
             return true;
-        } else if(row > 3 && this.board[row-4][column] == '-' && this.board[row-3][column] == '-' && this.board[row-2][column] == '-' && this.board[row-1][column] == '-'){ // row: checking for four empty spots before the piece
+        } else if(row > 3 && this.board[row-4][column] == '.' && this.board[row-3][column] == '.' && this.board[row-2][column] == '.' && this.board[row-1][column] == '.'){ // row: checking for four empty spots before the piece
             return true;
-        } else if(column > 3 && this.board[row][column-4] == '-' && this.board[row][column-3] == '-' && this.board[row][column-2] == '-' && this.board[row][column-1] == '-'){ // column: checking for four empty spots before the piece the piece
+        } else if(column > 3 && this.board[row][column-4] == '.' && this.board[row][column-3] == '.' && this.board[row][column-2] == '.' && this.board[row][column-1] == '.'){ // column: checking for four empty spots before the piece the piece
             return true;
-        } else if(row > 3 && column > 3 && this.board[row-4][column-4] == '-' && this.board[row-3][column-3] == '-' && this.board[row-2][column-2] == '-' && this.board[row-1][column-1] == '-'){ // diagonalUp: checking for four empty spots before the piece
+        } else if(row > 3 && column > 3 && this.board[row-4][column-4] == '.' && this.board[row-3][column-3] == '.' && this.board[row-2][column-2] == '.' && this.board[row-1][column-1] == '.'){ // diagonalUp: checking for four empty spots before the piece
             return true;
-        } else if(row < 16 && column > 3 && this.board[row+4][column-4] == '-' && this.board[row+3][column-3] == '-' && this.board[row+2][column-2] == '-' && this.board[row+1][column-1] == '-'){ // diagonalDown: checking for four empty spots before the piece
+        } else if(row < 16 && column > 3 && this.board[row+4][column-4] == '.' && this.board[row+3][column-3] == '.' && this.board[row+2][column-2] == '.' && this.board[row+1][column-1] == '.'){ // diagonalDown: checking for four empty spots before the piece
             return true;
         } else {
             return false;
+        }
+    }
+
+    private boolean fullBoard(){
+        for(int i = 0; i < 20; i++){
+            for(int j = 0; j < 20; j++){
+                if(this.board[i][j] == '.') return false;
+            }
+        }
+        return true;
+    }
+
+    private int determineLongWinner(){
+        int setsOfFiveX;
+        int setsOfFiveO;
+
+        // check rows for X and O
+        double numAdjacentX;
+        double numAdjacentO;
+        char[] row;
+        for(int i = 0; i < 20; i++){
+            row = getRow(i);
+            for(int j = 0; j < 20; j++){
+                if(row[j] == 'O'){
+                    if(numAdjacentX >= 5){
+                        setsOfFiveX += Math.floor((numAdjacentX / 5));
+                    }
+                    numAdjacentX = 0;
+                    numAdjacentO++;
+                } else if(row[j] == 'X'){
+                    if(numAdjacentO >= 5){
+                        setsOfFiveO += Math.floor((numAdjacentO / 5));
+                    }
+                    numAdjacentX++;
+                    numAdjacentO = 0;
+                } 
+            }
+        }
+
+        // check columns for X and O
+        numAdjacentX = 0;
+        numAdjacentO = 0;
+        char[] column;
+        for(int i = 0; i < 20; i++){
+            column = getColumn(i);
+            for(int j = 0; j < 20; j++){
+                if(column[j] == 'O'){
+                    if(numAdjacentX >= 5){
+                        setsOfFiveX += Math.floor((numAdjacentX / 5));
+                    }
+                    numAdjacentX = 0;
+                    numAdjacentO++;
+                } else if(column[j] == 'X'){
+                    if(numAdjacentO >= 5){
+                        setsOfFiveO += Math.floor((numAdjacentO / 5));
+                    }
+                    numAdjacentX++;
+                    numAdjacentO = 0;
+                } 
+            }
+        }
+        
+        // check diagonalDown for X and O
+        numAdjacentX = 0;
+        numAdjacentO = 0;
+        char[] diagonalDown;
+        for(int i = 0; i < 30; i++){
+            diagonalDown = getDiagonalDown(i);
+            for(int j = 0; j < diagonalDown.length; j++){
+                if(column[j] == 'O'){
+                    if(numAdjacentX >= 5){
+                        setsOfFiveX += Math.floor((numAdjacentX / 5));
+                    }
+                    numAdjacentX = 0;
+                    numAdjacentO++;
+                } else if(column[j] == 'X'){
+                    if(numAdjacentO >= 5){
+                        setsOfFiveO += Math.floor((numAdjacentO / 5));
+                    }
+                    numAdjacentX++;
+                    numAdjacentO = 0;
+                } 
+            }
+        }
+
+        // check diagonalUp for X and O
+        numAdjacentX = 0;
+        numAdjacentO = 0;
+        char[] diagonalUp;
+        for(int i = 0; i < 30; i++){
+            diagonalUp = getDiagonalUp(i);
+            for(int j = 0; j < diagonalUp.length; j++){
+                if(column[j] == 'O'){
+                    if(numAdjacentX >= 5){
+                        setsOfFiveX += Math.floor((numAdjacentX / 5));
+                    }
+                    numAdjacentX = 0;
+                    numAdjacentO++;
+                } else if(column[j] == 'X'){
+                    if(numAdjacentO >= 5){
+                        setsOfFiveO += Math.floor((numAdjacentO / 5));
+                    }
+                    numAdjacentX++;
+                    numAdjacentO = 0;
+                } 
+            }
+        }
+
+        if(setsOfFiveX > setsOfFiveO){
+            return 1;
+        } else if(setsOfFiveX < setsOfFiveO){
+            return 2;
+        } else {
+            return 0; // no one won
         }
     }
 }
