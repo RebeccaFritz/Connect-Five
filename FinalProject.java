@@ -37,18 +37,27 @@
 
 
     /**
-     * Returns True if either some player has already won the game, 
-     * or if there are no more moves possible on the board
+     * Returns 0 if either no player has already won the game, 
+     * or if there are no more moves possible on the board.
+     * 
+     * If someone has won the game, it returns 1 (X) or 2 (O) 
+     * depending on which Player won.
+     * 
      * @param b The board
-     * @return True if the Short Game is over
+     * @return The winner of the game, or 0 if neither player has won
      */
-    public boolean isShortGameOver(char[][] b);
+    public int isShortGameOver(char[][] b);
 
 
     /**
-     * Returns True if there are no more moves possible on the board
+     * Returns 0 if either no player has already won the game, 
+     * or if there are no more moves possible on the board.
+     * 
+     * If someone has won the game, it returns 1 (X) or 2 (O) 
+     * depending on which Player won.
+     * 
      * @param b The board
-     * @return True if the Long Game is over
+     * @return The winner of the game, or 0 if neither player has won
      */
-    public boolean isLongGameOver(char[][] b);
+    public int isLongGameOver(char[][] b);
  }
