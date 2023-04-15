@@ -112,31 +112,38 @@ class FritzFP implements FinalProject{
                 // check if the computer has four in a row
                 // if so, take win
                 myMove = this.freeSpace;
+                return myMove;
             } else if(opponentCanWin()){
                 // block win
                 // if the player has four uninterupted pieces, only block if one side is already blocked 
                 // if the pieces are interrupted block within the interuption
                 myMove = this.freeSpace;
+                return myMove;
             } else if(computerHasThreeInARow()){
                 // check if the computer has three in a row
                 // if not blocked, make four
                 myMove = this.freeSpace;
+                return myMove;
             } else if(opponentHasThree()){
-                // check if the opponent has three in a row with a blank space on either side
+                // check if the opponent has three in a row with a blank space on both sides
                 // if so, block three
                 myMove = this.freeSpace;
+                return myMove;
             } else if(computerHasThree()){
                 // check if the computer has three in a set of five
                 // if not blocked, make four
                 myMove = this.freeSpace;
+                return myMove;
             } else if(computerHasTwo()){
                 // check if the computer has two in a set of five
                 // if not blocked, make three
                 myMove = this.freeSpace;
+                return myMove;
             } else if(computerHasOne()){
                 // check if the computer has one piece in a set of five
                 // if not blocked, make two
                 myMove = this.freeSpace;
+                return myMove;
             } else {
                 // if there is an empty five by five square, place a piece in the middle
                 for(int i = 2; i < 18; i++){
@@ -168,8 +175,8 @@ class FritzFP implements FinalProject{
                 }   
                 myMove[0] = randomRow;
                 myMove[1] = randomColumn;
+                return myMove;
             }
-            return myMove;
         }
 
         public int isShortGameOver(char[][] b){
@@ -261,20 +268,20 @@ class FritzFP implements FinalProject{
         } else if(findDiagonalUpOfN(3, this.opponentPiece)){
             return true;
         // check senarios X-X-X, -XXX-, XX-X-, X-XX-, -X-XX, -XX-X for rows, columns, and diagonals
-        } else if(setOfThreeinFive("row", this.opponentPiece)){ 
+        } else if(setOfThreeinFive("row", this.opponentPiece)){
             return true;
-        } else if(setOfThreeinFive("column", this.opponentPiece)){ 
+        } else if(setOfThreeinFive("column", this.opponentPiece)){
             return true;
-        } else if(setOfThreeinFive("diagonalDown", this.opponentPiece)){ 
+        } else if(setOfThreeinFive("diagonalDown", this.opponentPiece)){
             return true;
-        } else if(setOfThreeinFive("diagonalUp", this.opponentPiece)){ 
+        } else if(setOfThreeinFive("diagonalUp", this.opponentPiece)){
             return true;
         } else {
             return false;
         }
     }
 
-    private boolean computerHasThree(){ 
+    private boolean computerHasThree(){ // this is making invalid moves
         // check senarios O-O-O, OOO--, -OOO-, --OOO, OO-O-, O-OO-, -O-OO, -OO-O for rows, columns, and diagonals
         if(setOfThreeinFive("row", this.computerPiece)){
             return true;
@@ -769,7 +776,7 @@ class FritzFP implements FinalProject{
                     rowIdx = j+4;
                     columnIdx = 0;
                 } else {
-                    rowIdx = 29;
+                    rowIdx = 19;
                     columnIdx = j-15;
                 }
 
@@ -875,7 +882,6 @@ class FritzFP implements FinalProject{
                         } else {
                             this.freeSpace[0] = i+3;
                         }
-                        return true;
                     } else if(piece == this.computerPiece && fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario OOO--
                         this.freeSpace[0] = i+3;
                         return true;
@@ -910,9 +916,9 @@ class FritzFP implements FinalProject{
                         return true;
                     } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario OO--O
                         if(random.nextInt(2) == 0){
-                            this.freeSpace[0] = i+3;
+                            this.freeSpace[0] = i+2;
                         } else {
-                            this.freeSpace[0] = i+4;
+                            this.freeSpace[0] = i+3;
                         }
                         return true;
                     } 
@@ -986,7 +992,7 @@ class FritzFP implements FinalProject{
                     } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario OO--O
                         if(random.nextInt(2) == 0){
                             this.freeSpace[0] = rowIdx+i+2;
-                            this.freeSpace[1] = columnIdx+2;
+                            this.freeSpace[1] = columnIdx+i+2;
                         } else {
                             this.freeSpace[0] = rowIdx+i+3;
                             this.freeSpace[1] = columnIdx+i+3;
