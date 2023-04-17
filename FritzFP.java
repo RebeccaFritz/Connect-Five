@@ -281,7 +281,7 @@ class FritzFP implements FinalProject{
         }
     }
 
-    private boolean computerHasThree(){ // this is making invalid moves
+    private boolean computerHasThree(){
         // check senarios O-O-O, OOO--, -OOO-, --OOO, OO-O-, O-OO-, -O-OO, -OO-O for rows, columns, and diagonals
         if(setOfThreeinFive("row", this.computerPiece)){
             return true;
