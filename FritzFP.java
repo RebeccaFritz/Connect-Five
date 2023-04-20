@@ -258,11 +258,9 @@ class FritzFP implements FinalProject{
     }
 
     private boolean opponentHasThree(){ 
-        // check senarios X-X-X, -XXX-, XX-X-, X-XX-, -X-XX, -XX-X for rows, columns, and diagonals
-        // don't prevent 4 from being formed if one side is blocked NOT IMPLEMENTED
-        // this should (but is not currently) check the following cases
-        // .X-X-X., -XXX-, .XX-X-, .X-XX-, -X-XX., -XX-X. for rows, columns, and diagonals 
-        // '.' is the new space that needs to be checked and where the block should be placed
+        // don't prevent 4 from being formed if one side is blocked 
+        // this should check the following cases
+        // -X-X-X-, --XXX-, -XXX--, -XX-X-, -X-XX- for rows, columns, and diagonals 
         if(setOfThreeOpponentPieceinFive("row")){
             return true;
         } else if(setOfThreeOpponentPieceinFive("column")){
@@ -1108,17 +1106,25 @@ class FritzFP implements FinalProject{
                         }
                         return true;
                     } else if(i < fullSet.length-5 && fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario --OOO-
-                        if(random.nextInt(2) == 0){
+                        if(i == fullSet.length-6){
                             this.freeSpace[1] = i+1;
                         } else {
-                            this.freeSpace[1] = i+5;
+                            if(random.nextInt(2) == 0){
+                                this.freeSpace[1] = i+1;
+                            } else {
+                                this.freeSpace[1] = i+5;
+                            }
                         }
                         return true;
                     } else if(i < fullSet.length-5 && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.' && fullSet[i+5] == '.' ){ // check senario -OOO--
-                        if(random.nextInt(2) == 0){
-                            this.freeSpace[1] = i;
-                        } else {
+                        if(i == 0){
                             this.freeSpace[1] = i+4;
+                        } else {
+                            if(random.nextInt(2) == 0){
+                            this.freeSpace[1] = i;
+                            } else {
+                            this.freeSpace[1] = i+4;
+                            }
                         }
                         return true;
                     } else if(i < fullSet.length-5 && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario -O-OO-
@@ -1164,17 +1170,25 @@ class FritzFP implements FinalProject{
                         }
                         return true;
                     } else if(i < fullSet.length-5 && fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario --OOO-
-                        if(random.nextInt(2) == 0){
+                        if(i == fullSet.length-6){
                             this.freeSpace[0] = i+1;
                         } else {
-                            this.freeSpace[0] = i+5;
+                            if(random.nextInt(2) == 0){
+                                this.freeSpace[0] = i+1;
+                            } else {
+                                this.freeSpace[0] = i+5;
+                            }
                         }
                         return true;
                     } else if(i < fullSet.length-5 && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.' && fullSet[i+5] == '.' ){ // check senario -OOO--
-                        if(random.nextInt(2) == 0){
-                            this.freeSpace[0] = i;
-                        } else {
+                        if(i == 0){
                             this.freeSpace[0] = i+4;
+                        } else {
+                            if(random.nextInt(2) == 0){
+                                this.freeSpace[0] = i;
+                            } else {
+                                this.freeSpace[0] = i+4;
+                            }
                         }
                         return true;
                     } else if(i < fullSet.length-5 && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario -O-OO-
@@ -1231,21 +1245,31 @@ class FritzFP implements FinalProject{
                         }
                         return true;
                     } else if(i < fullSet.length-5 && fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario --OOO-
-                        if(random.nextInt(2) == 0){
+                        if(i == fullSet.length-6){
                             this.freeSpace[0] = rowIdx+i+1;
                             this.freeSpace[1] = columnIdx+i+1;
                         } else {
-                            this.freeSpace[0] = rowIdx+i+5;
-                            this.freeSpace[1] = columnIdx+i+5;
+                            if(random.nextInt(2) == 0){
+                                this.freeSpace[0] = rowIdx+i+1;
+                                this.freeSpace[1] = columnIdx+i+1;
+                            } else {
+                                this.freeSpace[0] = rowIdx+i+5;
+                                this.freeSpace[1] = columnIdx+i+5;
+                            }
                         }
                         return true;
                     } else if(i < fullSet.length-5 && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.' && fullSet[i+5] == '.' ){ // check senario -OOO--
-                        if(random.nextInt(2) == 0){
-                            this.freeSpace[0] = rowIdx+i;
-                            this.freeSpace[1] = columnIdx+i;
-                        } else {
+                        if(i == 0){
                             this.freeSpace[0] = rowIdx+i+4;
                             this.freeSpace[1] = columnIdx+i+4;
+                        } else {
+                            if(random.nextInt(2) == 0){
+                                this.freeSpace[0] = rowIdx+i;
+                                this.freeSpace[1] = columnIdx+i;
+                            } else {
+                                this.freeSpace[0] = rowIdx+i+4;
+                                this.freeSpace[1] = columnIdx+i+4;
+                            }
                         }
                         return true;
                     } else if(i < fullSet.length-5 && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario -O-OO-
@@ -1308,21 +1332,31 @@ class FritzFP implements FinalProject{
                         }
                         return true;
                     } else if(i < fullSet.length-5 && fullSet[i] == '.' && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario --OOO-
-                        if(random.nextInt(2) == 0){
+                        if(i == fullSet.length-6){
                             this.freeSpace[0] = rowIdx-(i+1);
                             this.freeSpace[1] = columnIdx+i+1;
                         } else {
-                            this.freeSpace[0] = rowIdx-(i+5);
-                            this.freeSpace[1] = columnIdx+i+5;
+                            if(random.nextInt(2) == 0){
+                                this.freeSpace[0] = rowIdx-(i+1);
+                                this.freeSpace[1] = columnIdx+i+1;
+                            } else {
+                                this.freeSpace[0] = rowIdx-(i+5);
+                                this.freeSpace[1] = columnIdx+i+5;
+                            }
                         }
                         return true;
                     } else if(i < fullSet.length-5 && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.' && fullSet[i+5] == '.' ){ // check senario -OOO--
-                        if(random.nextInt(2) == 0){
-                            this.freeSpace[0] = rowIdx-i;
-                            this.freeSpace[1] = columnIdx+i;
-                        } else {
+                        if(i == 0){
                             this.freeSpace[0] = rowIdx-(i+4);
                             this.freeSpace[1] = columnIdx+i+4;
+                        } else {
+                            if(random.nextInt(2) == 0){
+                                this.freeSpace[0] = rowIdx-i;
+                                this.freeSpace[1] = columnIdx+i;
+                            } else {
+                                this.freeSpace[0] = rowIdx-(i+4);
+                                this.freeSpace[1] = columnIdx+i+4;
+                            }
                         }
                         return true;
                     } else if(i < fullSet.length-5 && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario -O-OO-
