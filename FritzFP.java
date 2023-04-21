@@ -113,7 +113,7 @@ class FritzFP implements FinalProject{
                 // if so, take win
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(opponentCanWin()){
+            } else if(opponentCanWinLong()){
                 // block win
                 // if the player has four uninterupted pieces, only block if one side is already blocked 
                 // if the pieces are interrupted block within the interuption
@@ -222,6 +222,38 @@ class FritzFP implements FinalProject{
     private boolean opponentCanWin(){ 
         // check for four 'X' in a row with a free space on one side
         if(findRowOfN(4, this.opponentPiece)){
+            return true;
+        } else if(findColumnOfN(4, this.opponentPiece)){
+            return true;
+        } else if(findDiagonalDownOfN(4, this.opponentPiece)){
+            return true;
+        } else if(findDiagonalUpOfN(4, this.opponentPiece)){
+            return true;
+        // checking for XX-XX, X-XXX, XXX-X in rows, columns, and diagonals
+        } else if(setOfFourinFive("row", this.opponentPiece)){
+            return true;
+        } else if(setOfFourinFive("column", this.opponentPiece)){
+            return true;
+        } else if(setOfFourinFive("diagonalDown", this.opponentPiece)){
+            return true;
+        } else if(setOfFourinFive("diagonalUp", this.opponentPiece)){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean opponentCanWinLong(){ 
+        if(findRowOfN(9, this.opponentPiece)){
+            return true;
+        } else if(findColumnOfN(9, this.opponentPiece)){
+            return true;
+        } else if(findDiagonalDownOfN(9, this.opponentPiece)){
+            return true;
+        } else if(findDiagonalUpOfN(9, this.opponentPiece)){
+            return true;
+        // check for four 'X' in a row with a free space on one side
+        } else if(findRowOfN(4, this.opponentPiece)){
             return true;
         } else if(findColumnOfN(4, this.opponentPiece)){
             return true;
@@ -365,6 +397,12 @@ class FritzFP implements FinalProject{
             } else if(i > 4 && n == 4 && numInRow == n && row[i] == opposingPiece && row[i-5] == '.'){ // four in a row with a free space to the left, right is blocked
                 this.freeSpace[1] = i-5;
                 return true;
+            } else if(i > 8 && n == 9 && numInRow == 9 && row[i] == '.' && row[i-9] == opposingPiece){ // nine in a row with a free space to the right, left is blocked
+                this.freeSpace[1] = i;
+                return true;
+            } else if(i > 8 && n == 9 && numInRow == n && row[i] == opposingPiece && row[i-9] == '.'){ // nine in a row with a free space to the left, right is blocked
+                this.freeSpace[1] = i-9;
+                return true;
             } else if(row[i] == piece){
                 numInRow++;
             } else if(row[i] != piece){
@@ -425,7 +463,13 @@ class FritzFP implements FinalProject{
             } else if(i > 4 && n == 4 && numInColumn == n && column[i] == opposingPiece && column[i-5] == '.'){ // 4 in a column with a free space on the top and an opposing piece on bottom
                 this.freeSpace[0] = i-5;
                 return true;
-            }  else if(column[i] == piece){
+            } else if(i > 8 && n == 9 && numInColumn == n && column[i] == '.' && column[i-9] == opposingPiece){ // nine in a column with a free space to the bottom, top is blocked
+                this.freeSpace[0] = i;
+                return true;
+            } else if(i > 8 && n == 9 && numInColumn == n && column[i] == opposingPiece && column[i-9] == '.'){ // nine in a column with a free space to the top, bottom is blocked
+                this.freeSpace[0] = i-9;
+                return true;
+            } else if(column[i] == piece){
                 numInColumn++;
             } else if(column[i] != piece){
                 numInColumn = 0;
@@ -543,7 +587,15 @@ class FritzFP implements FinalProject{
                 this.freeSpace[0] = rowIdx+(i-5);
                 this.freeSpace[1] = columnIdx+(i-5);
                 return true;
-            }  else if(diagonal[i] == piece){
+            } else if(i > 9 && n == 9 && numInDiagonal == 9 && diagonal[i] == '.' && diagonal[i-9] == opposingPiece){ // nine in a downward diagonal with a free space to the bottom right, top left is blocked
+                this.freeSpace[0] = rowIdx+i;
+                this.freeSpace[1] = columnIdx+i;
+                return true;
+            } else if(i > 9 && n == 9 && numInDiagonal == n && diagonal[i] == opposingPiece && diagonal[i-9] == '.'){ // nine in a downward diagonal with a free space to the top left, bottom right is blocked
+                this.freeSpace[0] = rowIdx+(i-9);
+                this.freeSpace[1] = columnIdx+(i-9);
+                return true;
+            } else if(diagonal[i] == piece){
                 numInDiagonal++;
             } else if(diagonal[i] != piece){
                 numInDiagonal = 0;
@@ -661,7 +713,15 @@ class FritzFP implements FinalProject{
                 this.freeSpace[0] = rowIdx-(i-5);
                 this.freeSpace[1] = columnIdx+(i-5);
                 return true;
-            } else if(diagonal[i] == piece){
+            } else if(i > 9 && n == 9 && numInDiagonal == 9 && diagonal[i] == '.' && diagonal[i-9] == opposingPiece){ // nine in a upward diagonal with a free space to the top right, bottom left is blocked
+                this.freeSpace[0] = rowIdx-i;
+                this.freeSpace[1] = columnIdx+i;
+                return true;
+            } else if(i > 9 && n == 9 && numInDiagonal == n && diagonal[i] == opposingPiece && diagonal[i-9] == '.'){ // nine in a upward diagonal with a free space to the bottom left, top right is blocked
+                this.freeSpace[0] = rowIdx-(i-9);
+                this.freeSpace[1] = columnIdx+(i-9);
+                return true;
+            }else if(diagonal[i] == piece){
                 numInDiagonal++;
             } else if(diagonal[i] != piece){
                 numInDiagonal = 0;
@@ -2142,7 +2202,7 @@ class FritzFP implements FinalProject{
         } else if(setsOfFiveX < setsOfFiveO){
             return 2;
         } else {
-            return 0; // no one won
+            return 100; // no one won // should return 0 according to the interface
         }
     }
 }
