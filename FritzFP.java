@@ -23,7 +23,36 @@ class FritzFP implements FinalProject{
                 this.opponentPiece = 'X';
             }
             
-            if(computerCanWin()){
+            if(boardHasNPieces(0)){
+                myMove[0] = 9;
+                myMove[1] = 9;
+                return myMove;
+            } else if(boardHasNPieces(1)){
+                for(int i = 0; i < 20; i++){
+                    for(int j = 0; j < 20; j++){
+                        if(this.board[i][j] != '.'){ // find the first piece
+                            int firstRowIdx = i;
+                            int firstColumnIdx = j;
+
+                            int randomValue = this.random.nextInt(4);
+                            if(randomValue == 0){
+                                myMove[0] = firstRowIdx-1;
+                                myMove[1] = firstColumnIdx-1;
+                            } else if(randomValue == 1){
+                                myMove[0] = firstRowIdx+1;
+                                myMove[1] = firstColumnIdx+1;
+                            } else if(randomValue == 2){
+                                myMove[0] = firstRowIdx-1;
+                                myMove[1] = firstColumnIdx+1;
+                            } else if(randomValue == 3){
+                                myMove[0] = firstRowIdx+1;
+                                myMove[1] = firstColumnIdx-1;
+                            }
+                        }
+                    }
+                }
+                return myMove;
+            } else if(computerCanWin()){
                 // check if the computer has four in a row
                 // if so, take win
                 myMove = this.freeSpace;
@@ -61,39 +90,8 @@ class FritzFP implements FinalProject{
                 return myMove;
             } else {
                 // if there is an empty five by five square, place a piece in the middle
-                // starting in the middle of the board
-                for(int i = 9; i < 18; i++){ // check the bottom right corner
-                    for(int j = 9; j < 18; j++){
-                        if(isEmptyFivebyFive(i, j)){
-                            myMove[0] = i;
-                            myMove[1] = j;
-                            return myMove;
-                        }
-                    }
-                }
-
-                for(int i = 9; i > 1; i--){ // check the top right corner
-                    for(int j = 9; j < 18; j++){
-                        if(isEmptyFivebyFive(i, j)){
-                            myMove[0] = i;
-                            myMove[1] = j;
-                            return myMove;
-                        }
-                    }
-                }
-
-                for(int i = 9; i < 18; i++){ // check the bottom left corner
-                    for(int j = 9; j > 1; j--){
-                        if(isEmptyFivebyFive(i, j)){
-                            myMove[0] = i;
-                            myMove[1] = j;
-                            return myMove;
-                        }
-                    }
-                }
-
-                for(int i = 9; i > 1; i--){ // check the top left corner
-                    for(int j = 9; j > 1; j--){
+                for(int i = 2; i < 18; i++){
+                    for(int j = 2; j < 18; j++){
                         if(isEmptyFivebyFive(i, j)){
                             myMove[0] = i;
                             myMove[1] = j;
@@ -138,7 +136,36 @@ class FritzFP implements FinalProject{
                 this.opponentPiece = 'X';
             }
         
-            if(computerCanWinLong()){
+            if(boardHasNPieces(0)){
+                myMove[0] = 9;
+                myMove[1] = 9;
+                return myMove;
+            } else if(boardHasNPieces(1)){
+                for(int i = 0; i < 20; i++){
+                    for(int j = 0; j < 20; j++){
+                        if(this.board[i][j] != '.'){ // find the first piece
+                            int firstRowIdx = i;
+                            int firstColumnIdx = j;
+
+                            int randomValue = this.random.nextInt(4);
+                            if(randomValue == 0){
+                                myMove[0] = firstRowIdx-1;
+                                myMove[1] = firstColumnIdx-1;
+                            } else if(randomValue == 1){
+                                myMove[0] = firstRowIdx+1;
+                                myMove[1] = firstColumnIdx+1;
+                            } else if(randomValue == 2){
+                                myMove[0] = firstRowIdx-1;
+                                myMove[1] = firstColumnIdx+1;
+                            } else if(randomValue == 3){
+                                myMove[0] = firstRowIdx+1;
+                                myMove[1] = firstColumnIdx-1;
+                            }
+                        }
+                    }
+                }
+                return myMove;
+            } else if(computerCanWinLong()){
                 // check if the computer has four or nine in a row
                 // if so, take win
                 myMove = this.freeSpace;
@@ -1994,6 +2021,17 @@ class FritzFP implements FinalProject{
         } else {
             return false;
         }
+    }
+
+    private boolean boardHasNPieces(int n){
+        int piecesOnBoard = 0;
+        for(int i = 0; i < 20; i++){
+            for(int j = 0; j < 20; j++){
+                if(this.board[i][j] != '.') piecesOnBoard++;
+            }
+        }
+        if(piecesOnBoard > n) return false;
+        return true;
     }
 
     private int[] pickOptimalSpot(int[][] spots, char piece){
