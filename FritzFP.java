@@ -387,7 +387,7 @@ class FritzFP implements FinalProject{
 
     private boolean opponentHasEight(){ 
         // if the opponent has eight in a row block one side
-        if(findRowOfN(9, this.opponentPiece)){
+        if(findRowOfN(8, this.opponentPiece)){
             return true;
         } else if(findColumnOfN(8, this.opponentPiece)){
             return true;
@@ -2141,7 +2141,6 @@ class FritzFP implements FinalProject{
             c--;
         }
         //check north west
-        //check north east
         r = rowIdx;
         c = columnIdx;
         while(r >= 0 && c >= 0){
