@@ -35,16 +35,16 @@ class FritzFP implements FinalProject{
                             int firstColumnIdx = j;
 
                             int randomValue = this.random.nextInt(4);
-                            if(randomValue == 0){
+                            if(randomValue == 0 && firstRowIdx > 1 && firstColumnIdx > 1){
                                 myMove[0] = firstRowIdx-1;
                                 myMove[1] = firstColumnIdx-1;
-                            } else if(randomValue == 1){
+                            } else if(randomValue == 1 && firstRowIdx < 19 && firstColumnIdx < 19){
                                 myMove[0] = firstRowIdx+1;
                                 myMove[1] = firstColumnIdx+1;
-                            } else if(randomValue == 2){
+                            } else if(randomValue == 2 && firstRowIdx > 1 && firstColumnIdx < 19){
                                 myMove[0] = firstRowIdx-1;
                                 myMove[1] = firstColumnIdx+1;
-                            } else if(randomValue == 3){
+                            } else if(randomValue == 3 && firstRowIdx < 19 && firstColumnIdx > 1){
                                 myMove[0] = firstRowIdx+1;
                                 myMove[1] = firstColumnIdx-1;
                             }
@@ -148,16 +148,16 @@ class FritzFP implements FinalProject{
                             int firstColumnIdx = j;
 
                             int randomValue = this.random.nextInt(4);
-                            if(randomValue == 0){
+                            if(randomValue == 0 && firstRowIdx > 1 && firstColumnIdx > 1){
                                 myMove[0] = firstRowIdx-1;
                                 myMove[1] = firstColumnIdx-1;
-                            } else if(randomValue == 1){
+                            } else if(randomValue == 1 && firstRowIdx < 19 && firstColumnIdx < 19){
                                 myMove[0] = firstRowIdx+1;
                                 myMove[1] = firstColumnIdx+1;
-                            } else if(randomValue == 2){
+                            } else if(randomValue == 2 && firstRowIdx > 1 && firstColumnIdx < 19){
                                 myMove[0] = firstRowIdx-1;
                                 myMove[1] = firstColumnIdx+1;
-                            } else if(randomValue == 3){
+                            } else if(randomValue == 3 && firstRowIdx < 19 && firstColumnIdx > 1){
                                 myMove[0] = firstRowIdx+1;
                                 myMove[1] = firstColumnIdx-1;
                             }
@@ -715,7 +715,7 @@ class FritzFP implements FinalProject{
                 this.freeSpace[0] = rowIdx+i;
                 this.freeSpace[1] = columnIdx+i;
                 return true;
-            } else if(i == diagonal.length-1 && i > 9 && n == 9 && numInDiagonal == 8 && diagonal[i] == piece && diagonal[i-9] == '.'){ // nine in a row with a free space on the top, bottom is the wall
+            } else if(i == diagonal.length-1 && i > 8 && n == 9 && numInDiagonal == 8 && diagonal[i] == piece && diagonal[i-9] == '.'){ // nine in a row with a free space on the top, bottom is the wall
                 this.freeSpace[0] = rowIdx+(i-9);
                 this.freeSpace[1] = columnIdx+(i-9);
                 return true;
@@ -844,7 +844,7 @@ class FritzFP implements FinalProject{
                 this.freeSpace[0] = rowIdx-i;
                 this.freeSpace[1] = columnIdx+i;
                 return true;
-            } else if(i == diagonal.length-1 && i > 9 && n == 9 && numInDiagonal == 8 && diagonal[i] == piece && diagonal[i-9] == '.'){ // nine in a row with a free space on the top, bottom is the wall
+            } else if(i == diagonal.length-1 && i > 8 && n == 9 && numInDiagonal == 8 && diagonal[i] == piece && diagonal[i-9] == '.'){ // nine in a row with a free space on the top, bottom is the wall
                 this.freeSpace[0] = rowIdx-(i-9);
                 this.freeSpace[1] = columnIdx+(i-9);
                 return true;
