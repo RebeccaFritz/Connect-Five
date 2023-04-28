@@ -27,30 +27,8 @@ class FritzFP implements FinalProject{
                 myMove[0] = 9;
                 myMove[1] = 9;
                 return myMove;
-            } else if(boardHasNPieces(1)){
-                for(int i = 0; i < 20; i++){
-                    for(int j = 0; j < 20; j++){
-                        if(this.board[i][j] != '.'){ // find the first piece
-                            int firstRowIdx = i;
-                            int firstColumnIdx = j;
-
-                            int randomValue = this.random.nextInt(4);
-                            if(randomValue == 0 && firstRowIdx > 1 && firstColumnIdx > 1){
-                                myMove[0] = firstRowIdx-1;
-                                myMove[1] = firstColumnIdx-1;
-                            } else if(randomValue == 1 && firstRowIdx < 19 && firstColumnIdx < 19){
-                                myMove[0] = firstRowIdx+1;
-                                myMove[1] = firstColumnIdx+1;
-                            } else if(randomValue == 2 && firstRowIdx > 1 && firstColumnIdx < 19){
-                                myMove[0] = firstRowIdx-1;
-                                myMove[1] = firstColumnIdx+1;
-                            } else if(randomValue == 3 && firstRowIdx < 19 && firstColumnIdx > 1){
-                                myMove[0] = firstRowIdx+1;
-                                myMove[1] = firstColumnIdx-1;
-                            }
-                        }
-                    }
-                }
+            } else if(cornerOpen()){
+                myMove = this.freeSpace;
                 return myMove;
             } else if(computerCanWin()){
                 // check if the computer has four in a row
@@ -140,30 +118,8 @@ class FritzFP implements FinalProject{
                 myMove[0] = 9;
                 myMove[1] = 9;
                 return myMove;
-            } else if(boardHasNPieces(1)){
-                for(int i = 0; i < 20; i++){
-                    for(int j = 0; j < 20; j++){
-                        if(this.board[i][j] != '.'){ // find the first piece
-                            int firstRowIdx = i;
-                            int firstColumnIdx = j;
-
-                            int randomValue = this.random.nextInt(4);
-                            if(randomValue == 0 && firstRowIdx > 1 && firstColumnIdx > 1){
-                                myMove[0] = firstRowIdx-1;
-                                myMove[1] = firstColumnIdx-1;
-                            } else if(randomValue == 1 && firstRowIdx < 19 && firstColumnIdx < 19){
-                                myMove[0] = firstRowIdx+1;
-                                myMove[1] = firstColumnIdx+1;
-                            } else if(randomValue == 2 && firstRowIdx > 1 && firstColumnIdx < 19){
-                                myMove[0] = firstRowIdx-1;
-                                myMove[1] = firstColumnIdx+1;
-                            } else if(randomValue == 3 && firstRowIdx < 19 && firstColumnIdx > 1){
-                                myMove[0] = firstRowIdx+1;
-                                myMove[1] = firstColumnIdx-1;
-                            }
-                        }
-                    }
-                }
+            } else if(cornerOpen()){
+                myMove = this.freeSpace;
                 return myMove;
             } else if(computerCanWinLong()){
                 // check if the computer has four or nine in a row
@@ -265,6 +221,42 @@ class FritzFP implements FinalProject{
         }
         
     // Private Methods
+
+    private boolean cornerOpen(){
+        if(boardHasNPieces(1)){
+            for(int i = 2; i < 18; i++){
+                for(int j = 2; j < 18; j++){
+                    if(this.board[i][j] == 'X'){ // find the first piece
+                        int firstRowIdx = i;
+                        int firstColumnIdx = j;
+                        
+                        int randomValue = this.random.nextInt(4);
+                        if(randomValue == 0){
+                            this.freeSpace[0] = firstRowIdx-1;
+                            this.freeSpace[1] = firstColumnIdx-1;
+                            return true;
+                        } else if(randomValue == 1){
+                            this.freeSpace[0] = firstRowIdx+1;
+                            this.freeSpace[1] = firstColumnIdx+1;
+                            return true;
+                        } else if(randomValue == 2){
+                            this.freeSpace[0] = firstRowIdx-1;
+                            this.freeSpace[1] = firstColumnIdx+1;
+                            return true;
+                        } else {
+                            this.freeSpace[0] = firstRowIdx+1;
+                            this.freeSpace[1] = firstColumnIdx-1;
+                            return true;
+                        }
+                    }
+                }
+            }
+            this.freeSpace[0] = 9;
+            this.freeSpace[1] = 9;
+            return true;
+        } 
+        return false;   
+    }
 
     private boolean computerCanWin(){
         // checking for -OOOO, OOOO-, OO-OO, O-OOO, OOO-O in rows, columns, and diagonals
