@@ -46,9 +46,17 @@ class FritzFP implements FinalProject{
                 // if not blocked, make four
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(opponentHasThree()){ // need to also block intersetion of twos NOT IMPELEMENTED
+            } else if(opponentHasThree()){ 
                 // check if the opponent has three in a row with a blank space on both sides
                 // if so, block three
+                myMove = this.freeSpace;
+                return myMove;
+            } else if(hasIntersectingTwos(this.opponentPiece)){
+                // block intersection
+                myMove = this.freeSpace;
+                return myMove;
+            } else if(hasIntersectingTwos(this.computerPiece)){
+                // create intersection
                 myMove = this.freeSpace;
                 return myMove;
             } else if(computerHasThree()){
@@ -142,12 +150,15 @@ class FritzFP implements FinalProject{
                 // if so, block eight
                 myMove = this.freeSpace;
                 return myMove;
-            }else if(opponentHasThree()){
-                // check if the opponent has three in a row with a blank space on both sides
-                // if so, block three
+            } else if(hasIntersectingTwos(this.opponentPiece)){
+                // block intersection
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(computerHasThree()){
+            } else if(hasIntersectingTwos(this.computerPiece)){
+                // create intersection
+                myMove = this.freeSpace;
+                return myMove;
+            }  else if(computerHasThree()){
                 // check if the computer has three in a set of five
                 // if not blocked, make four
                 myMove = this.freeSpace;
@@ -422,6 +433,97 @@ class FritzFP implements FinalProject{
         } else {
             return false;
         }
+    }
+
+    private boolean hasIntersectingTwos(char piece){
+        for(int i = 3; i < 17; i++){
+            for(int j = 3; j < 17; j++){
+                if(this.board[i][j] == '.'){
+                    if(twoNorth(i, j, piece) && twoNorthWest(i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(twoNorth(i, j, piece) && twoNorthEast(i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(twoNorth(i, j, piece) && twoEast(i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(twoNorth(i, j, piece) && twoWest(i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(twoNorth(i, j, piece) && twoSouthWest(i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(twoNorth(i, j, piece) && twoSouthEast(i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(twoSouth(i, j, piece) && twoNorthWest(i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(twoSouth(i, j, piece) && twoNorthEast(i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(twoSouth(i, j, piece) && twoEast(i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(twoSouth(i, j, piece) && twoWest(i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(twoSouth(i, j, piece) && twoSouthWest(i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(twoSouth(i, j, piece) && twoSouthEast(i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(twoEast(i, j, piece) && twoNorthWest(i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(twoEast(i, j, piece) && twoNorthEast(i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(twoEast(i, j, piece) && twoSouthWest(i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(twoEast(i, j, piece) && twoSouthEast(i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(twoWest(i, j, piece) && twoNorthWest(i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(twoWest(i, j, piece) && twoNorthEast(i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(twoWest(i, j, piece) && twoSouthWest(i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(twoWest(i, j, piece) && twoSouthEast(i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private boolean computerHasTwo(){ 
@@ -1357,7 +1459,6 @@ class FritzFP implements FinalProject{
 
                 for(int i = 0; i < 16; i++){
                     if(i < fullSet.length-6 && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == '.' && fullSet[i+5] == piece && fullSet[i+6] == '.'){ // check senario -O-O-O-
-                        int randomValue = this.random.nextInt(4);
                         int[][] spots = {{this.freeSpace[0], i}, {this.freeSpace[0], i+2}, {this.freeSpace[0], i+4}, {this.freeSpace[0], i+6}};
                         this.freeSpace = pickOptimalSpot(spots, this.computerPiece);
                         return true;
@@ -1558,7 +1659,6 @@ class FritzFP implements FinalProject{
             char[] fullSet;
             int rowIdx;
             int columnIdx;
-            int randomValue;
             if(type == "row"){  
                 for(int j = 0; j < 20; j++){
                     fullSet = getRow(j);
@@ -1740,7 +1840,6 @@ class FritzFP implements FinalProject{
                             this.freeSpace = pickOptimalSpot(spots, piece);
                             return true;
                         } else if(fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == '.'){ // check senario -OO--
-                            randomValue = this.random.nextInt(2);
                             int[][] spots = {{rowIdx-i, columnIdx+i}, {rowIdx-(i+3), columnIdx+i+3}};
                             this.freeSpace = pickOptimalSpot(spots, piece);
                             return true;
@@ -1773,7 +1872,6 @@ class FritzFP implements FinalProject{
         char[] fullSet;
         int rowIdx;
         int columnIdx;
-        int randomValue = this.random.nextInt(2);
         if(type == "row"){  
             for(int j = 0; j < 20; j++){
                 fullSet = getRow(j);
@@ -2025,6 +2123,71 @@ class FritzFP implements FinalProject{
         if(piecesOnBoard > n) return false;
         return true;
     }
+
+    private boolean twoNorth(int rowIdx, int columnIdx, char piece){
+        if(this.board[rowIdx-1][columnIdx] == piece && this.board[rowIdx-2][columnIdx] == piece && this.board[rowIdx-3][columnIdx] == '.'){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean twoSouth(int rowIdx, int columnIdx, char piece){
+        if(this.board[rowIdx+1][columnIdx] == piece && this.board[rowIdx+2][columnIdx] == piece && this.board[rowIdx+3][columnIdx] == '.'){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    private boolean twoEast(int rowIdx, int columnIdx, char piece){
+        if(this.board[rowIdx][columnIdx+1] == piece && this.board[rowIdx][columnIdx+2] == piece && this.board[rowIdx][columnIdx+3] == '.'){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    private boolean twoWest(int rowIdx, int columnIdx, char piece){
+        if(this.board[rowIdx][columnIdx-1] == piece && this.board[rowIdx][columnIdx-2] == piece && this.board[rowIdx][columnIdx-3] == '.'){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    private boolean twoNorthEast(int rowIdx, int columnIdx, char piece){
+        if(this.board[rowIdx-1][columnIdx+1] == piece && this.board[rowIdx-2][columnIdx+2] == piece && this.board[rowIdx-3][columnIdx+3] == '.'){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    private boolean twoNorthWest(int rowIdx, int columnIdx, char piece){
+        if(this.board[rowIdx-1][columnIdx-1] == piece && this.board[rowIdx-2][columnIdx-2] == piece && this.board[rowIdx-3][columnIdx-3] == '.'){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    private boolean twoSouthEast(int rowIdx, int columnIdx, char piece){
+        if(this.board[rowIdx+1][columnIdx+1] == piece && this.board[rowIdx+2][columnIdx+2] == piece && this.board[rowIdx+3][columnIdx+3] == '.'){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    private boolean twoSouthWest(int rowIdx, int columnIdx, char piece){
+        if(this.board[rowIdx+1][columnIdx-1] == piece && this.board[rowIdx+2][columnIdx-2] == piece && this.board[rowIdx+3][columnIdx-3] == '.'){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     private int[] pickOptimalSpot(int[][] spots, char piece){
         int bestScore = score(spots[0], piece);
