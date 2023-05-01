@@ -150,12 +150,25 @@ class FritzFP implements FinalProject{
                 // if so, block eight
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(hasIntersectingTwos(this.opponentPiece)){
+            } else if(opponentHasThree()){ 
+                // check if the opponent has three in a row with a blank space on both sides
+                // if so, block three
+                myMove = this.freeSpace;
+                return myMove;
+            } else if(hasIntersectingSevens(this.computerPiece)){
+                // make intersection
+                myMove = this.freeSpace;
+                return myMove;
+            } else if(hasIntersectingSevens(this.opponentPiece)){
                 // block intersection
                 myMove = this.freeSpace;
                 return myMove;
             } else if(hasIntersectingTwos(this.computerPiece)){
-                // create intersection
+                // make intersection
+                myMove = this.freeSpace;
+                return myMove;
+            } else if(hasIntersectingTwos(this.opponentPiece)){
+                // block intersection
                 myMove = this.freeSpace;
                 return myMove;
             }  else if(computerHasThree()){
@@ -435,87 +448,178 @@ class FritzFP implements FinalProject{
         }
     }
 
+    private boolean hasIntersectingSevens(char piece){
+        for(int i = 8; i < 12; i++){
+            for(int j = 8; j < 12; j++){
+                if(this.board[i][j] == '.'){
+                    if(nNorth(7, i, j, piece) && nNorthWest(7, i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(nNorth(7, i, j, piece) && nNorthEast(7, i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(nNorth(7, i, j, piece) && nEast(7, i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(nNorth(7, i, j, piece) && nWest(7, i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(nNorth(7, i, j, piece) && nSouthWest(7, i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(nNorth(7, i, j, piece) && nSouthEast(7, i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(nSouth(7, i, j, piece) && nNorthWest(7, i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(nSouth(7, i, j, piece) && nNorthEast(7, i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(nSouth(7, i, j, piece) && nEast(7, i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(nSouth(7, i, j, piece) && nWest(7, i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(nSouth(7, i, j, piece) && nSouthWest(7, i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(nSouth(7, i, j, piece) && nSouthEast(7, i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(nEast(7, i, j, piece) && nNorthWest(7, i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(nEast(7, i, j, piece) && nNorthEast(7, i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(nEast(7, i, j, piece) && nSouthWest(7, i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(nEast(7, i, j, piece) && nSouthEast(7, i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(nWest(7, i, j, piece) && nNorthWest(7, i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(nWest(7, i, j, piece) && nNorthEast(7, i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(nWest(7, i, j, piece) && nSouthWest(7, i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    } else if(nWest(7, i, j, piece) && nSouthEast(7, i, j, piece)){
+                        this.freeSpace[0] = i;
+                        this.freeSpace[1] = j;
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     private boolean hasIntersectingTwos(char piece){
         for(int i = 3; i < 17; i++){
             for(int j = 3; j < 17; j++){
                 if(this.board[i][j] == '.'){
-                    if(twoNorth(i, j, piece) && twoNorthWest(i, j, piece)){
+                    if(nNorth(2, i, j, piece) && nNorthWest(2, i, j, piece)){
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
-                    } else if(twoNorth(i, j, piece) && twoNorthEast(i, j, piece)){
+                    } else if(nNorth(2, i, j, piece) && nNorthEast(2, i, j, piece)){
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
-                    } else if(twoNorth(i, j, piece) && twoEast(i, j, piece)){
+                    } else if(nNorth(2, i, j, piece) && nEast(2, i, j, piece)){
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
-                    } else if(twoNorth(i, j, piece) && twoWest(i, j, piece)){
+                    } else if(nNorth(2, i, j, piece) && nWest(2, i, j, piece)){
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
-                    } else if(twoNorth(i, j, piece) && twoSouthWest(i, j, piece)){
+                    } else if(nNorth(2, i, j, piece) && nSouthWest(2, i, j, piece)){
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
-                    } else if(twoNorth(i, j, piece) && twoSouthEast(i, j, piece)){
+                    } else if(nNorth(2, i, j, piece) && nSouthEast(2, i, j, piece)){
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
-                    } else if(twoSouth(i, j, piece) && twoNorthWest(i, j, piece)){
+                    } else if(nSouth(2, i, j, piece) && nNorthWest(2, i, j, piece)){
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
-                    } else if(twoSouth(i, j, piece) && twoNorthEast(i, j, piece)){
+                    } else if(nSouth(2, i, j, piece) && nNorthEast(2, i, j, piece)){
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
-                    } else if(twoSouth(i, j, piece) && twoEast(i, j, piece)){
+                    } else if(nSouth(2, i, j, piece) && nEast(2, i, j, piece)){
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
-                    } else if(twoSouth(i, j, piece) && twoWest(i, j, piece)){
+                    } else if(nSouth(2, i, j, piece) && nWest(2, i, j, piece)){
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
-                    } else if(twoSouth(i, j, piece) && twoSouthWest(i, j, piece)){
+                    } else if(nSouth(2, i, j, piece) && nSouthWest(2, i, j, piece)){
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
-                    } else if(twoSouth(i, j, piece) && twoSouthEast(i, j, piece)){
+                    } else if(nSouth(2, i, j, piece) && nSouthEast(2, i, j, piece)){
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
-                    } else if(twoEast(i, j, piece) && twoNorthWest(i, j, piece)){
+                    } else if(nEast(2, i, j, piece) && nNorthWest(2, i, j, piece)){
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
-                    } else if(twoEast(i, j, piece) && twoNorthEast(i, j, piece)){
+                    } else if(nEast(2, i, j, piece) && nNorthEast(2, i, j, piece)){
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
-                    } else if(twoEast(i, j, piece) && twoSouthWest(i, j, piece)){
+                    } else if(nEast(2, i, j, piece) && nSouthWest(2, i, j, piece)){
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
-                    } else if(twoEast(i, j, piece) && twoSouthEast(i, j, piece)){
+                    } else if(nEast(2, i, j, piece) && nSouthEast(2, i, j, piece)){
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
-                    } else if(twoWest(i, j, piece) && twoNorthWest(i, j, piece)){
+                    } else if(nWest(2, i, j, piece) && nNorthWest(2, i, j, piece)){
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
-                    } else if(twoWest(i, j, piece) && twoNorthEast(i, j, piece)){
+                    } else if(nWest(2, i, j, piece) && nNorthEast(2, i, j, piece)){
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
-                    } else if(twoWest(i, j, piece) && twoSouthWest(i, j, piece)){
+                    } else if(nWest(2, i, j, piece) && nSouthWest(2, i, j, piece)){
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
-                    } else if(twoWest(i, j, piece) && twoSouthEast(i, j, piece)){
+                    } else if(nWest(2, i, j, piece) && nSouthEast(2, i, j, piece)){
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
@@ -2124,70 +2228,69 @@ class FritzFP implements FinalProject{
         return true;
     }
 
-    private boolean twoNorth(int rowIdx, int columnIdx, char piece){
-        if(this.board[rowIdx-1][columnIdx] == piece && this.board[rowIdx-2][columnIdx] == piece && this.board[rowIdx-3][columnIdx] == '.'){
-            return true;
-        } else {
-            return false;
+    private boolean nNorth(int n, int rowIdx, int columnIdx, char piece){
+        for(int i = 1; i <= n; i++){
+            if(this.board[rowIdx-n][columnIdx] != piece) return false;
         }
+        
+        return true;
     }
 
-    private boolean twoSouth(int rowIdx, int columnIdx, char piece){
-        if(this.board[rowIdx+1][columnIdx] == piece && this.board[rowIdx+2][columnIdx] == piece && this.board[rowIdx+3][columnIdx] == '.'){
-            return true;
-        } else {
-            return false;
+    private boolean nSouth(int n, int rowIdx, int columnIdx, char piece){
+        for(int i = 1; i <= n; i++){
+            if(this.board[rowIdx+n][columnIdx] != piece) return false;
         }
-    }
-    
-    private boolean twoEast(int rowIdx, int columnIdx, char piece){
-        if(this.board[rowIdx][columnIdx+1] == piece && this.board[rowIdx][columnIdx+2] == piece && this.board[rowIdx][columnIdx+3] == '.'){
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    private boolean twoWest(int rowIdx, int columnIdx, char piece){
-        if(this.board[rowIdx][columnIdx-1] == piece && this.board[rowIdx][columnIdx-2] == piece && this.board[rowIdx][columnIdx-3] == '.'){
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    private boolean twoNorthEast(int rowIdx, int columnIdx, char piece){
-        if(this.board[rowIdx-1][columnIdx+1] == piece && this.board[rowIdx-2][columnIdx+2] == piece && this.board[rowIdx-3][columnIdx+3] == '.'){
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    private boolean twoNorthWest(int rowIdx, int columnIdx, char piece){
-        if(this.board[rowIdx-1][columnIdx-1] == piece && this.board[rowIdx-2][columnIdx-2] == piece && this.board[rowIdx-3][columnIdx-3] == '.'){
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    private boolean twoSouthEast(int rowIdx, int columnIdx, char piece){
-        if(this.board[rowIdx+1][columnIdx+1] == piece && this.board[rowIdx+2][columnIdx+2] == piece && this.board[rowIdx+3][columnIdx+3] == '.'){
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    private boolean twoSouthWest(int rowIdx, int columnIdx, char piece){
-        if(this.board[rowIdx+1][columnIdx-1] == piece && this.board[rowIdx+2][columnIdx-2] == piece && this.board[rowIdx+3][columnIdx-3] == '.'){
-            return true;
-        } else {
-            return false;
-        }
+        
+        return true;
     }
 
+    private boolean nEast(int n, int rowIdx, int columnIdx, char piece){
+        for(int i = 1; i <= n; i++){
+            if(this.board[rowIdx][columnIdx+n] != piece) return false;
+        }
+        
+        return true;
+    }
+
+    private boolean nWest(int n, int rowIdx, int columnIdx, char piece){
+        for(int i = 1; i <= n; i++){
+            if(this.board[rowIdx][columnIdx-n] != piece) return false;
+        }
+        
+        return true;
+    }
+
+    private boolean nNorthEast(int n, int rowIdx, int columnIdx, char piece){
+        for(int i = 1; i <= n; i++){
+            if(this.board[rowIdx-n][columnIdx+n] != piece) return false;
+        }
+        
+        return true;
+    }
+    
+    private boolean nNorthWest(int n, int rowIdx, int columnIdx, char piece){
+        for(int i = 1; i <= n; i++){
+            if(this.board[rowIdx-n][columnIdx-n] != piece) return false;
+        }
+        
+        return true;
+    }
+    
+    private boolean nSouthEast(int n, int rowIdx, int columnIdx, char piece){
+        for(int i = 1; i <= n; i++){
+            if(this.board[rowIdx+n][columnIdx+n] != piece) return false;
+        }
+        
+        return true;
+    }
+    
+    private boolean nSouthWest(int n, int rowIdx, int columnIdx, char piece){
+        for(int i = 1; i <= n; i++){
+            if(this.board[rowIdx+n][columnIdx-n] != piece) return false;
+        }
+        
+        return true;
+    }
 
     private int[] pickOptimalSpot(int[][] spots, char piece){
         int bestScore = score(spots[0], piece);
@@ -2421,7 +2524,7 @@ class FritzFP implements FinalProject{
         } else if(setsOfFiveX < setsOfFiveO){
             return 2;
         } else {
-            return 100; // no one won // should return 0 according to the interface
+            return 0; // no one won 
         }
     }
 }
