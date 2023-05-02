@@ -51,12 +51,12 @@ class FritzFP implements FinalProject{
                 // if unblocked, block three
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(hasIntersectingTwos(this.opponentPiece)){
-                // block intersection
-                myMove = this.freeSpace;
-                return myMove;
             } else if(hasIntersectingTwos(this.computerPiece)){
                 // create intersection
+                myMove = this.freeSpace;
+                return myMove;
+            } else if(hasIntersectingTwos(this.opponentPiece)){
+                // block intersection
                 myMove = this.freeSpace;
                 return myMove;
             } else if(computerHasThree()){
@@ -141,12 +141,12 @@ class FritzFP implements FinalProject{
                 myMove = this.freeSpace;
                 return myMove;
             } else if(computerHasEightInARow()){
-                // check if the opponent has eight in a row with a blank space on both sides
-                // if so, block eight
+                // check if the computer has eight in a row with a blank space on both sides
+                // if so, make nine
                 myMove = this.freeSpace;
                 return myMove;
             } else if(computerCanMakeFourInARow()){
-                // check if the computer has can mak four unblocked in a row
+                // check if the computer has can make four unblocked in a row
                 // if so, make four
                 myMove = this.freeSpace;
                 return myMove;
