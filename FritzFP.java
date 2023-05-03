@@ -528,7 +528,7 @@ class FritzFP implements FinalProject{
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
-                    } else if(i < 12 && j < 7 && nSouth(7, i, j, piece) && nSouthWest(7, i, j, piece)){
+                    } else if(i < 12 && j > 7 && nSouth(7, i, j, piece) && nSouthWest(7, i, j, piece)){
                         this.freeSpace[0] = i;
                         this.freeSpace[1] = j;
                         return true;
@@ -727,6 +727,10 @@ class FritzFP implements FinalProject{
                 int[][] spots = {{this.freeSpace[0], i}, {this.freeSpace[0], i-4}};
                 this.freeSpace = pickOptimalSpot(spots, piece);
                 return true;
+            } else if(i > 8 && n == 8 && numInRow == n && row[i] == '.' && row[i-9] == '.'){ // 8 in a row with a free space on both sides
+                int[][] spots = {{this.freeSpace[0], i}, {this.freeSpace[0], i-9}};
+                this.freeSpace = pickOptimalSpot(spots, piece);
+                return true;
             } else if(i == 4 && n == 4 && numInRow == n && row[i] == '.'){ // four in a row with a free space to the right, left is the wall
                 this.freeSpace[1] = i;
                 return true;
@@ -750,18 +754,6 @@ class FritzFP implements FinalProject{
                 return true;
             } else if(i > 9 && n == 9 && numInRow == n && row[i] == opposingPiece && row[i-10] == '.'){ // nine in a row with a free space to the left, right is blocked
                 this.freeSpace[1] = i-10;
-                return true;
-            } else if(i == 8 && n == 8 && numInRow == 8 && row[i] == '.'){ // eight in a row with a free space to the right, left is the wall
-                this.freeSpace[1] = i;
-                return true;
-            } else if(i == 19 && n == 8 && numInRow == 7 && row[i] == piece && row[i-8] == '.'){ // eight in a row with a free space to the left, right is the wall
-                this.freeSpace[1] = i-8;
-                return true;
-            } else if(i > 8 && n == 8 && numInRow == 8 && row[i] == '.' && row[i-9] == opposingPiece){ // eight in a row with a free space to the right, left is blocked
-                this.freeSpace[1] = i;
-                return true;
-            } else if(i > 8 && n == 8 && numInRow == 8 && row[i] == opposingPiece && row[i-9] == '.'){ // eight in a row with a free space to the left, right is blocked
-                this.freeSpace[1] = i-9;
                 return true;
             } else if(row[i] == piece){
                 numInRow++;
@@ -805,6 +797,10 @@ class FritzFP implements FinalProject{
                 return true;
             } else if(i > 3 && n == 3 && numInColumn == n && column[i] == '.' && column[i-4] == '.'){ // 3 in a column with a free space on both sides
                 int[][] spots = {{i, this.freeSpace[1]}, {i-4, this.freeSpace[1]}};
+                this.freeSpace = pickOptimalSpot(spots, piece);
+                return true;
+            } else if(i > 8 && n == 8 && numInColumn == n && column[i] == '.' && column[i-9] == '.'){ // 8 in a column with a free space on both sides
+                int[][] spots = {{i, this.freeSpace[1]}, {i-9, this.freeSpace[1]}};
                 this.freeSpace = pickOptimalSpot(spots, piece);
                 return true;
             } else if(i == 4 && n == 4 && numInColumn == n && column[i] == '.'){ // 4 in a column with a free space on the bottom, the top is the wall
@@ -925,6 +921,10 @@ class FritzFP implements FinalProject{
                 return true;
             } else if(i > 3 && n == 3 && numInDiagonal == n && diagonal[i] == '.' && diagonal[i-4] == '.'){ // 3 in a downward diagonal with a free space on both sides
                 int[][] spots = {{rowIdx+i, columnIdx+i}, {rowIdx+(i-4), columnIdx+(i-4)}};
+                this.freeSpace = pickOptimalSpot(spots, piece);
+                return true;
+            } else if(i > 8 && n == 8 && numInDiagonal == n && diagonal[i] == '.' && diagonal[i-9] == '.'){ // 3 in a downward diagonal with a free space on both sides
+                int[][] spots = {{rowIdx+i, columnIdx+i}, {rowIdx+(i-9), columnIdx+(i-9)}};
                 this.freeSpace = pickOptimalSpot(spots, piece);
                 return true;
             } else if(i == 4 && n == 4 && numInDiagonal == n && diagonal[i] == '.'){ // 4 in a diagonal with a free space on the bottom right, top left is the wall
@@ -1053,6 +1053,10 @@ class FritzFP implements FinalProject{
                 return true;
             } else if(i > 3 && n == 3 && numInDiagonal == n && diagonal[i] == '.' && diagonal[i-4] == '.'){ // 3 in a upward diagonal with a free space on both sides
                 int[][] spots = {{rowIdx-i, columnIdx+i}, {rowIdx-(i-4), columnIdx+(i-4)}};
+                this.freeSpace = pickOptimalSpot(spots, piece);
+                return true;
+            } else if(i > 8 && n == 8 && numInDiagonal == n && diagonal[i] == '.' && diagonal[i-9] == '.'){ // 3 in a upward diagonal with a free space on both sides
+                int[][] spots = {{rowIdx-i, columnIdx+i}, {rowIdx-(i-9), columnIdx+(i-9)}};
                 this.freeSpace = pickOptimalSpot(spots, piece);
                 return true;
             } else if(i == 4 && n == 4 && numInDiagonal == n && diagonal[i] == '.'){ // 4 in a diagonal with a free space on the top right, bottom left is the wall
