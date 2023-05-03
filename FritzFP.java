@@ -303,14 +303,23 @@ class FritzFP implements FinalProject{
     }
 
     private boolean computerCanWinLong(){
-        // check for nine in a row 
-        if(setOfNineInTen("row", this.opponentPiece)){
+        // check for nine in a row with a free space on one side
+        if(findRowOfN(9, this.computerPiece)){
             return true;
-        } else if(setOfNineInTen("column", this.opponentPiece)){
+        } else if(findColumnOfN(9, this.computerPiece)){
             return true;
-        } else if(setOfNineInTen("diagonalDown", this.opponentPiece)){
+        } else if(findDiagonalDownOfN(9, this.computerPiece)){
             return true;
-        } else if(setOfNineInTen("diagonalUp", this.opponentPiece)){
+        } else if(findDiagonalUpOfN(9, this.computerPiece)){
+            return true;
+        // check for nine in a set of ten
+        } else if(setOfNineInTen("row", this.computerPiece)){
+            return true;
+        } else if(setOfNineInTen("column", this.computerPiece)){
+            return true;
+        } else if(setOfNineInTen("diagonalDown", this.computerPiece)){
+            return true;
+        } else if(setOfNineInTen("diagonalUp", this.computerPiece)){
             return true;
         // checking for -OOOO, OOOO-, OO-OO, O-OOO, OOO-O in rows, columns, and diagonals
         } else if(setOfFourInFive("row", this.computerPiece)){
