@@ -130,13 +130,14 @@ class FritzFP implements FinalProject{
                 myMove = this.freeSpace;
                 return myMove;
             } else if(computerCanWinLong()){
-                // check if the computer has four or nine in a row
+                // check if the computer has four, nine, fourteen, or nineteen
                 // if so, take win
                 myMove = this.freeSpace;
                 return myMove;
             } else if(opponentCanWinLong()){
                 // block win
-                // if the player has four or nine uninterupted pieces, only block if one side is already blocked 
+                // if the player has four, nine, fourteen, or nineteen uninterupted pieces
+                // only block if one side is already blocked 
                 // if the pieces are interrupted block within the interuption
                 myMove = this.freeSpace;
                 return myMove;
@@ -303,8 +304,26 @@ class FritzFP implements FinalProject{
     }
 
     private boolean computerCanWinLong(){
+        // check for nineteen in a set of twenty
+        if(setOfNineteenInTwenty("row", this.computerPiece)){
+            return true;
+        } else if(setOfNineteenInTwenty("column", this.computerPiece)){
+            return true;
+        } else if(setOfNineteenInTwenty("diagonalDown", this.computerPiece)){
+            return true;
+        } else if(setOfNineteenInTwenty("diagonalUp", this.computerPiece)){
+            return true;
+        // check for fourteen in a set of fifteen
+        } else if(setOfFourteenInFifteen("row", this.computerPiece)){
+            return true;
+        } else if(setOfFourteenInFifteen("column", this.computerPiece)){
+            return true;
+        } else if(setOfFourteenInFifteen("diagonalDown", this.computerPiece)){
+            return true;
+        } else if(setOfFourteenInFifteen("diagonalUp", this.computerPiece)){
+            return true;
         // check for nine in a row with a free space on one side
-        if(findRowOfN(9, this.computerPiece)){
+        } else if(findRowOfN(9, this.computerPiece)){
             return true;
         } else if(findColumnOfN(9, this.computerPiece)){
             return true;
@@ -360,8 +379,26 @@ class FritzFP implements FinalProject{
     }
 
     private boolean opponentCanWinLong(){ 
+        // check for nineteen in a set of twenty
+        if(setOfNineteenInTwenty("row", this.opponentPiece)){
+            return true;
+        } else if(setOfNineteenInTwenty("column", this.opponentPiece)){
+            return true;
+        } else if(setOfNineteenInTwenty("diagonalDown", this.opponentPiece)){
+            return true;
+        } else if(setOfNineteenInTwenty("diagonalUp", this.opponentPiece)){
+            return true;
+        // check for fourteen in a set of fifteen
+        } else if(setOfFourteenInFifteen("row", this.opponentPiece)){
+            return true;
+        } else if(setOfFourteenInFifteen("column", this.opponentPiece)){
+            return true;
+        } else if(setOfFourteenInFifteen("diagonalDown", this.opponentPiece)){
+            return true;
+        } else if(setOfFourteenInFifteen("diagonalUp", this.opponentPiece)){
+            return true;
         // check for nine in a row with a free space on one side
-        if(findRowOfN(9, this.opponentPiece)){
+        } else if(findRowOfN(9, this.opponentPiece)){
             return true;
         } else if(findColumnOfN(9, this.opponentPiece)){
             return true;
@@ -1100,6 +1137,238 @@ class FritzFP implements FinalProject{
         return false;
     }
 
+    private boolean setOfNineteenInTwenty(String type, char piece){
+        char[] fullSet;
+        int rowIdx;
+        int columnIdx;
+        int blanks;
+        int piecesInSet;
+
+        char opposingPiece;
+        if(piece == 'X'){
+            opposingPiece = 'O';
+        } else {
+            opposingPiece = 'X';
+        }
+
+        if(type == "row"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getRow(j);
+                this.freeSpace[0] = j;
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 19 && blanks == 1){ 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks != 0) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks == 0){
+                        blanks++;
+                        this.freeSpace[1] = i;
+                    } 
+                }
+            }
+            return false;
+        } else if(type == "column"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getColumn(j);
+                this.freeSpace[1] = j;
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 19 && blanks == 1){ 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks != 0) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks == 0){
+                        blanks++;
+                        this.freeSpace[0] = i;
+                    } 
+                }
+            } 
+            return false;   
+        } else if(type == "diagonalDown"){
+            fullSet = getDiagonalDown(15);
+            blanks = 0;
+            piecesInSet = 0;
+        
+            rowIdx = 0;
+            columnIdx = 0;
+
+            for(int i = 0; i < fullSet.length; i++){ 
+                if(piecesInSet == 19 && blanks == 1){ 
+                    return true;
+                } else if((fullSet[i] == '.' && blanks != 0) || fullSet[i] == opposingPiece){
+                    blanks = 0;
+                    piecesInSet = 0;
+                } else if(fullSet[i] == piece){ 
+                    piecesInSet++;
+                } else if(fullSet[i] == '.' && blanks == 0){
+                    blanks++;
+                    this.freeSpace[0] = rowIdx+i;
+                    this.freeSpace[1] = columnIdx+i; 
+                }
+            }
+            return false;
+        } else if(type == "diagonalUp"){
+            fullSet = getDiagonalUp(15);
+            blanks = 0;
+            piecesInSet = 0;
+        
+            rowIdx = 19;
+            columnIdx = 0;
+
+            for(int i = 0; i < fullSet.length; i++){ 
+                if(piecesInSet == 19 && blanks == 1){ 
+                    return true;
+                } else if((fullSet[i] == '.' && blanks != 0) || fullSet[i] == opposingPiece){
+                    blanks = 0;
+                    piecesInSet = 0;
+                } else if(fullSet[i] == piece){ 
+                    piecesInSet++;
+                } else if(fullSet[i] == '.' && blanks == 0){
+                    blanks++;
+                    this.freeSpace[0] = rowIdx-i;
+                    this.freeSpace[1] = columnIdx+i; 
+                }
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean setOfFourteenInFifteen(String type, char piece){
+        char[] fullSet;
+        int rowIdx;
+        int columnIdx;
+        int blanks;
+        int piecesInSet;
+
+        char opposingPiece;
+        if(piece == 'X'){
+            opposingPiece = 'O';
+        } else {
+            opposingPiece = 'X';
+        }
+
+        if(type == "row"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getRow(j);
+                this.freeSpace[0] = j;
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 14 && blanks == 1){ 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks != 0) || (piece == this.opponentPiece && fullSet[i] == '.' && piecesInSet == 0) || (piece == this.opponentPiece && fullSet[i] == '.' && piecesInSet == 14) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks == 0){
+                        blanks++;
+                        this.freeSpace[1] = i;
+                    } 
+                }
+            }
+            return false;
+        } else if(type == "column"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getColumn(j);
+                this.freeSpace[1] = j;
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 14 && blanks == 1){ 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks != 0) || (piece == this.opponentPiece && fullSet[i] == '.' && piecesInSet == 0) || (piece == this.opponentPiece && fullSet[i] == '.' && piecesInSet == 14) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks == 0){
+                        blanks++;
+                        this.freeSpace[0] = i;
+                    } 
+                }
+            } 
+            return false;   
+        } else if(type == "diagonalDown"){ 
+            for(int j = 10; j < 21; j++){
+                fullSet = getDiagonalDown(j);
+                blanks = 0;
+                piecesInSet = 0;
+            
+                if(j <= 15){
+                    rowIdx = 15-j;
+                    columnIdx = 0;
+                } else {
+                    rowIdx = 0;
+                    columnIdx = j-15;
+                }
+
+                for(int i = 0; i < fullSet.length; i++){ 
+                    if(piecesInSet == 14 && blanks == 1){ 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks != 0) || (piece == this.opponentPiece && fullSet[i] == '.' && piecesInSet == 0) || (piece == this.opponentPiece && fullSet[i] == '.' && piecesInSet == 14) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks == 0){
+                        blanks++;
+                        this.freeSpace[0] = rowIdx+i;
+                        this.freeSpace[1] = columnIdx+i; 
+                    } 
+                }
+            }
+            return false;
+        } else if(type == "diagonalUp"){ 
+            for(int j = 10; j < 21; j++){
+                fullSet = getDiagonalUp(j);
+                blanks = 0;
+                piecesInSet = 0;
+            
+                if(j <= 15){
+                    rowIdx = j+4;
+                    columnIdx = 0;
+                } else {
+                    rowIdx = 19;
+                    columnIdx = j-15;
+                }
+
+                for(int i = 0; i < fullSet.length; i++){ 
+                    if(piecesInSet == 14 && blanks == 1){ 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks != 0) || (piece == this.opponentPiece && fullSet[i] == '.' && piecesInSet == 0) || (piece == this.opponentPiece && fullSet[i] == '.' && piecesInSet == 14) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks == 0){
+                        blanks++;
+                        this.freeSpace[0] = rowIdx-i;
+                        this.freeSpace[1] = columnIdx+i; 
+                    } 
+                }
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
+
     private boolean setOfNineInTen(String type, char piece){
         char[] fullSet;
         int rowIdx;
@@ -1124,14 +1393,14 @@ class FritzFP implements FinalProject{
                 for(int i = 0; i < 20; i++){
                     if(piecesInSet == 9 && blanks == 1){ 
                         return true;
-                    } else if(fullSet[i] == piece){ 
-                        piecesInSet++;
-                    } else if(fullSet[i] == '.' && blanks == 0 && piecesInSet > 0 && piecesInSet < 9){
-                        blanks++;
-                        this.freeSpace[1] = i;
-                    } else if((fullSet[i] == '.' && blanks != 0) || (fullSet[i] == '.' && piecesInSet == 0) || (fullSet[i] == '.' && piecesInSet == 9) || fullSet[i] == opposingPiece){
+                    } else if((fullSet[i] == '.' && blanks != 0) || (piece == this.opponentPiece && fullSet[i] == '.' && piecesInSet == 0) || (piece == this.opponentPiece && fullSet[i] == '.' && piecesInSet == 9) || fullSet[i] == opposingPiece){
                         blanks = 0;
                         piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks == 0){
+                        blanks++;
+                        this.freeSpace[1] = i;
                     } 
                 }
             }
@@ -1146,20 +1415,20 @@ class FritzFP implements FinalProject{
                 for(int i = 0; i < 20; i++){
                     if(piecesInSet == 9 && blanks == 1){ 
                         return true;
+                    } else if((fullSet[i] == '.' && blanks != 0) || (piece == this.opponentPiece && fullSet[i] == '.' && piecesInSet == 0) || (piece == this.opponentPiece && fullSet[i] == '.' && piecesInSet == 9) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
                     } else if(fullSet[i] == piece){ 
                         piecesInSet++;
                     } else if(fullSet[i] == '.' && blanks == 0){
                         blanks++;
                         this.freeSpace[0] = i;
-                    } else if((fullSet[i] == '.' && blanks != 0) || (fullSet[i] == '.' && piecesInSet == 0) || (fullSet[i] == '.' && piecesInSet == 9) || fullSet[i] == opposingPiece){
-                        blanks = 0;
-                        piecesInSet = 0;
-                    } 
+                    }  
                 }
             } 
             return false;   
         } else if(type == "diagonalDown"){ 
-            for(int j = 0; j < 30; j++){
+            for(int j = 5; j < 26; j++){
                 fullSet = getDiagonalDown(j);
                 blanks = 0;
                 piecesInSet = 0;
@@ -1175,21 +1444,21 @@ class FritzFP implements FinalProject{
                 for(int i = 0; i < fullSet.length; i++){ 
                     if(piecesInSet == 9 && blanks == 1){ 
                         return true;
+                    } else if((fullSet[i] == '.' && blanks != 0) || (piece == this.opponentPiece && fullSet[i] == '.' && piecesInSet == 0) || (piece == this.opponentPiece && fullSet[i] == '.' && piecesInSet == 9) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
                     } else if(fullSet[i] == piece){ 
                         piecesInSet++;
                     } else if(fullSet[i] == '.' && blanks == 0){
                         blanks++;
                         this.freeSpace[0] = rowIdx+i;
                         this.freeSpace[1] = columnIdx+i; 
-                    } else if((fullSet[i] == '.' && blanks != 0) || (fullSet[i] == '.' && piecesInSet == 0) || (fullSet[i] == '.' && piecesInSet == 9) || fullSet[i] == opposingPiece){
-                        blanks = 0;
-                        piecesInSet = 0;
-                    } 
+                    }
                 }
             }
             return false;
         } else if(type == "diagonalUp"){ 
-            for(int j = 0; j < 30; j++){
+            for(int j = 5; j < 26; j++){
                 fullSet = getDiagonalUp(j);
                 blanks = 0;
                 piecesInSet = 0;
@@ -1205,16 +1474,16 @@ class FritzFP implements FinalProject{
                 for(int i = 0; i < fullSet.length; i++){ 
                     if(piecesInSet == 9 && blanks == 1){ 
                         return true;
+                    } else if((fullSet[i] == '.' && blanks != 0) || (piece == this.opponentPiece && fullSet[i] == '.' && piecesInSet == 0) || (piece == this.opponentPiece && fullSet[i] == '.' && piecesInSet == 9) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
                     } else if(fullSet[i] == piece){ 
                         piecesInSet++;
                     } else if(fullSet[i] == '.' && blanks == 0){
                         blanks++;
                         this.freeSpace[0] = rowIdx-i;
                         this.freeSpace[1] = columnIdx+i; 
-                    } else if((fullSet[i] == '.' && blanks != 0) || (fullSet[i] == '.' && piecesInSet == 0) || (fullSet[i] == '.' && piecesInSet == 9) || fullSet[i] == opposingPiece){
-                        blanks = 0;
-                        piecesInSet = 0;
-                    } 
+                    }  
                 }
             }
             return false;
@@ -1232,21 +1501,21 @@ class FritzFP implements FinalProject{
                 fullSet = getRow(j);
                 this.freeSpace[0] = j;
 
-                for(int i = 0; i < 16; i++){
-                    if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario OO-OO
-                        this.freeSpace[1] = i+2;
-                        return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario OOO-O
+                for(int i = 0; i < 14; i++){
+                    if(fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario -OO-OO-
                         this.freeSpace[1] = i+3;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario O-OOO
-                        this.freeSpace[1] = i+1;
-                        return true;
-                    } else if(piece == this.computerPiece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario -OOOO 
-                        this.freeSpace[1] = i;
-                        return true;
-                    } else if(piece == this.computerPiece && fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario OOOO- 
+                    } else if(fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.' && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario -OOO-O-
                         this.freeSpace[1] = i+4;
+                        return true;
+                    } else if(fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario -O-OOO-
+                        this.freeSpace[1] = i+2;
+                        return true;
+                    } else if(piece == this.computerPiece && fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.' && fullSet[i+6] != piece){ // check senario -OOOO-- 
+                        this.freeSpace[1] = i+5;
+                        return true;
+                    } else if(piece == this.computerPiece && fullSet[i] != piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario --OOOO- 
+                        this.freeSpace[1] = i+1;
                         return true;
                     } else if(piece == this.opponentPiece && i < 15 && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario -OOOO- 
                         int[][] spots = {{freeSpace[0], i}, {freeSpace[0], i+5}};
@@ -1261,21 +1530,21 @@ class FritzFP implements FinalProject{
                 fullSet = getColumn(j);
                 this.freeSpace[1] = j;
 
-                for(int i = 0; i < 16; i++){
-                    if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario OO-OO
-                        this.freeSpace[0] = i+2;
-                        return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario OOO-O
+                for(int i = 0; i < 14; i++){
+                    if(fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario -OO-OO-
                         this.freeSpace[0] = i+3;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario O-OOO
-                        this.freeSpace[0] = i+1;
-                        return true;
-                    } else if(piece == this.computerPiece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario -OOOO 
-                        this.freeSpace[0] = i; 
-                        return true;
-                    } else if(piece == this.computerPiece && fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario OOOO- 
+                    } else if(fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.' && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario -OOO-O-
                         this.freeSpace[0] = i+4;
+                        return true;
+                    } else if(fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario -O-OOO-
+                        this.freeSpace[0] = i+2;
+                        return true;
+                    } else if(i < 14 && piece == this.computerPiece && fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.' && fullSet[i+6] != piece){ // check senario -OOOO-- 
+                        this.freeSpace[0] = i+5; 
+                        return true;
+                    } else if(i < 14 && piece == this.computerPiece && fullSet[i] != piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario --OOOO-
+                        this.freeSpace[0] = i+1;
                         return true;
                     } else if(piece == this.opponentPiece && i < 15 && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario -OOOO- 
                         if(this.random.nextInt(2) == 0){
@@ -1291,7 +1560,7 @@ class FritzFP implements FinalProject{
             } 
             return false;   
         } else if(type == "diagonalDown"){ 
-            for(int j = 0; j < 30; j++){
+            for(int j = 0; j < 31; j++){
                 fullSet = getDiagonalDown(j);
             
                 if(j <= 15){
@@ -1302,37 +1571,61 @@ class FritzFP implements FinalProject{
                     columnIdx = j-15;
                 }
 
-                for(int i = 0; i < fullSet.length-4; i++){ 
-                    if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario OO-OO
-                        this.freeSpace[0] = rowIdx+i+2;
-                        this.freeSpace[1] = columnIdx+i+2;
+                if(fullSet.length == 5){
+                    if(fullSet[0] == piece && fullSet[1] == piece && fullSet[2] == '.' && fullSet[3] == piece && fullSet[4] == piece){ // check senario OO-OO
+                        this.freeSpace[0] = rowIdx+2;
+                        this.freeSpace[1] = columnIdx+2;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario OOO-O
-                        this.freeSpace[0] = rowIdx+i+3;
-                        this.freeSpace[1] = columnIdx+i+3;
+                    } else if(fullSet[0] == piece && fullSet[1] == piece && fullSet[2] == piece && fullSet[3] == '.' && fullSet[4] == piece){ // check senario OOO-O
+                        this.freeSpace[0] = rowIdx+3;
+                        this.freeSpace[1] = columnIdx+3;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario O-OOO
-                        this.freeSpace[0] = rowIdx+i+1;
-                        this.freeSpace[1] = columnIdx+i+1;
+                    } else if(fullSet[0] == piece && fullSet[1] == '.' && fullSet[2] == piece && fullSet[3] == piece && fullSet[4] == piece){ // check senario O-OOO
+                        this.freeSpace[0] = rowIdx+1;
+                        this.freeSpace[1] = columnIdx+1;
                         return true;
-                    } else if(piece == this.computerPiece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario -OOOO 
-                        this.freeSpace[0] = rowIdx+i;
-                        this.freeSpace[1] = columnIdx+i; 
+                    } else if(piece == this.computerPiece && fullSet[0] == '.' && fullSet[1] == piece && fullSet[2] == piece && fullSet[3] == piece && fullSet[4] == piece){ // check senario -OOOO 
+                        this.freeSpace[0] = rowIdx;
+                        this.freeSpace[1] = columnIdx; 
                         return true;
-                    } else if(piece == this.computerPiece && fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario OOOO- 
-                        this.freeSpace[0] = rowIdx+i+4;
-                        this.freeSpace[1] = columnIdx+i+4;
+                    } else if(piece == this.computerPiece && fullSet[0] == piece && fullSet[1] == piece && fullSet[2] == piece && fullSet[3] == piece && fullSet[4] == '.'){ // check senario OOOO- 
+                        this.freeSpace[0] = rowIdx+4;
+                        this.freeSpace[1] = columnIdx+4;
                         return true;
-                    } else if(piece == this.opponentPiece && i < fullSet.length-5 && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario -OOOO- 
-                        int[][] spots = {{rowIdx+i, columnIdx+i}, {rowIdx+i+5, columnIdx+i+5}};
-                        this.freeSpace = pickOptimalSpot(spots, piece);
-                        return true;
-                    } 
+                    }
+                } else {
+                    for(int i = 0; i < fullSet.length-6; i++){ 
+                        if(fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario -OO-OO-
+                            this.freeSpace[0] = rowIdx+i+3;
+                            this.freeSpace[1] = columnIdx+i+3;
+                            return true;
+                        } else if(fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.' && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario -OOO-O-
+                            this.freeSpace[0] = rowIdx+i+4;
+                            this.freeSpace[1] = columnIdx+i+4;
+                            return true;
+                        } else if(fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario -O-OOO-
+                            this.freeSpace[0] = rowIdx+i+2;
+                            this.freeSpace[1] = columnIdx+i+2;
+                            return true;
+                        } else if(piece == this.computerPiece && fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.' && fullSet[i+6] != piece){ // check senario -OOOO-- 
+                            this.freeSpace[0] = rowIdx+i+5;
+                            this.freeSpace[1] = columnIdx+i+5; 
+                            return true;
+                        } else if(piece == this.computerPiece && fullSet[i] != piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario --OOOO-
+                            this.freeSpace[0] = rowIdx+i+1;
+                            this.freeSpace[1] = columnIdx+i+1;
+                            return true;
+                        } else if(piece == this.opponentPiece && i < fullSet.length-5 && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario -OOOO- 
+                            int[][] spots = {{rowIdx+i, columnIdx+i}, {rowIdx+i+5, columnIdx+i+5}};
+                            this.freeSpace = pickOptimalSpot(spots, piece);
+                            return true;
+                        } 
+                    }
                 }
             }
             return false;
         } else if(type == "diagonalUp"){ 
-            for(int j = 0; j < 30; j++){
+            for(int j = 0; j < 31; j++){
                 fullSet = getDiagonalUp(j);
             
                 if(j <= 15){
@@ -1342,33 +1635,57 @@ class FritzFP implements FinalProject{
                     rowIdx = 19;
                     columnIdx = j-15;
                 }
-
-                for(int i = 0; i < fullSet.length-4; i++){ 
-                    if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario OO-OO
-                        this.freeSpace[0] = rowIdx-(i+2);
-                        this.freeSpace[1] = columnIdx+i+2;
+                
+                if(fullSet.length == 5){
+                    if(fullSet[0] == piece && fullSet[1] == piece && fullSet[2] == '.' && fullSet[3] == piece && fullSet[4] == piece){ // check senario OO-OO
+                        this.freeSpace[0] = rowIdx-2;
+                        this.freeSpace[1] = columnIdx+2;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece){ // check senario OOO-O
-                        this.freeSpace[0] = rowIdx-(i+3);
-                        this.freeSpace[1] = columnIdx+i+3;
+                    } else if(fullSet[0] == piece && fullSet[1] == piece && fullSet[2] == piece && fullSet[3] == '.' && fullSet[4] == piece){ // check senario OOO-O
+                        this.freeSpace[0] = rowIdx-3;
+                        this.freeSpace[1] = columnIdx+3;
                         return true;
-                    } else if(fullSet[i] == piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario O-OOO
-                        this.freeSpace[0] = rowIdx-(i+1);
-                        this.freeSpace[1] = columnIdx+i+1;
+                    } else if(fullSet[0] == piece && fullSet[1] == '.' && fullSet[2] == piece && fullSet[3] == piece && fullSet[4] == piece){ // check senario O-OOO
+                        this.freeSpace[0] = rowIdx-1;
+                        this.freeSpace[1] = columnIdx+1;
                         return true;
-                    } else if(piece == this.computerPiece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check senario -OOOO 
-                        this.freeSpace[0] = rowIdx-i;
-                        this.freeSpace[1] = columnIdx+i; 
+                    } else if(piece == this.computerPiece && fullSet[0] == '.' && fullSet[1] == piece && fullSet[2] == piece && fullSet[3] == piece && fullSet[4] == piece){ // check senario -OOOO 
+                        this.freeSpace[0] = rowIdx;
+                        this.freeSpace[1] = columnIdx; 
                         return true;
-                    } else if(piece == this.computerPiece && fullSet[i] == piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.'){ // check senario OOOO- 
-                        this.freeSpace[0] = rowIdx-(i+4);
-                        this.freeSpace[1] = columnIdx+i+4;
+                    } else if(piece == this.computerPiece && fullSet[0] == piece && fullSet[1] == piece && fullSet[2] == piece && fullSet[3] == piece && fullSet[4] == '.'){ // check senario OOOO- 
+                        this.freeSpace[0] = rowIdx-4;
+                        this.freeSpace[1] = columnIdx+4;
                         return true;
-                    } else if(piece == this.opponentPiece && i < fullSet.length-5 && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario -OOOO- 
-                        int[][] spots = {{rowIdx-i, columnIdx+i}, {rowIdx-(i+5), columnIdx+i+5}};
-                        this.freeSpace = pickOptimalSpot(spots, piece);
-                        return true;
-                    } 
+                    }
+                } else {
+                    for(int i = 0; i < fullSet.length-6; i++){ 
+                        if(fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario -OO-OO-
+                            this.freeSpace[0] = rowIdx-(i+3);
+                            this.freeSpace[1] = columnIdx+i+3;
+                            return true;
+                        } else if(fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.' && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario -OOO-O-
+                            this.freeSpace[0] = rowIdx-(i+4);
+                            this.freeSpace[1] = columnIdx+i+4;
+                            return true;
+                        } else if(fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario -O-OOO-
+                            this.freeSpace[0] = rowIdx-(i+2);
+                            this.freeSpace[1] = columnIdx+i+2;
+                            return true;
+                        } else if(piece == this.computerPiece && fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.' && fullSet[i+6] != piece){ // check senario -OOOO-- 
+                            this.freeSpace[0] = rowIdx-(i+5);
+                            this.freeSpace[1] = columnIdx+i+5; 
+                            return true;
+                        } else if(piece == this.computerPiece && fullSet[i] != piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario --OOOO-
+                            this.freeSpace[0] = rowIdx-(i+1);
+                            this.freeSpace[1] = columnIdx+i+1;
+                            return true;
+                        } else if(piece == this.opponentPiece && i < fullSet.length-5 && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario -OOOO- 
+                            int[][] spots = {{rowIdx-i, columnIdx+i}, {rowIdx-(i+5), columnIdx+i+5}};
+                            this.freeSpace = pickOptimalSpot(spots, piece);
+                            return true;
+                        } 
+                    }
                 }
             }
             return false;
@@ -1470,7 +1787,7 @@ class FritzFP implements FinalProject{
             } 
             return false;   
         } else if(type == "diagonalDown"){
-            for(int j = 0; j < 30; j++){
+            for(int j = 0; j < 31; j++){
                 fullSet = getDiagonalDown(j);
             
                 if(j <= 15){
@@ -1527,7 +1844,7 @@ class FritzFP implements FinalProject{
             }
             return false;
         } else if(type == "diagonalUp"){
-            for(int j = 0; j < 30; j++){
+            for(int j = 0; j < 31; j++){
                 fullSet = getDiagonalUp(j);
             
                 if(j <= 15){
@@ -1681,7 +1998,7 @@ class FritzFP implements FinalProject{
             } 
             return false;   
         } else if(type == "diagonalDown"){ 
-            for(int j = 0; j < 30; j++){
+            for(int j = 0; j < 31; j++){
                 fullSet = getDiagonalDown(j);
             
                 if(j <= 15){
@@ -1736,7 +2053,7 @@ class FritzFP implements FinalProject{
             }
             return false;
         } else if(type == "diagonalUp"){
-            for(int j = 0; j < 30; j++){
+            for(int j = 0; j < 31; j++){
                 fullSet = getDiagonalUp(j);
             
                 if(j <= 15){
@@ -1890,7 +2207,7 @@ class FritzFP implements FinalProject{
                 } 
                 return false;   
             } else if(type == "diagonalDown"){
-                for(int j = 0; j < 30; j++){
+                for(int j = 0; j < 31; j++){
                     fullSet = getDiagonalDown(j);
                 
                     if(j <= 15){
@@ -1947,7 +2264,7 @@ class FritzFP implements FinalProject{
                 }
                 return false;
             } else if(type == "diagonalUp"){ 
-                for(int j = 0; j < 30; j++){
+                for(int j = 0; j < 31; j++){
                     fullSet = getDiagonalUp(j);
                 
                     if(j <= 15){
@@ -2069,7 +2386,7 @@ class FritzFP implements FinalProject{
             } 
             return false;   
         } else if(type == "diagonalDown"){
-            for(int j = 0; j < 30; j++){
+            for(int j = 0; j < 31; j++){
                 fullSet = getDiagonalDown(j);
             
                 if(j <= 15){
@@ -2106,7 +2423,7 @@ class FritzFP implements FinalProject{
             }
             return false;
         } else if(type == "diagonalUp"){ 
-            for(int j = 0; j < 30; j++){
+            for(int j = 0; j < 31; j++){
                 fullSet = getDiagonalUp(j);
             
                 if(j <= 15){
@@ -2568,7 +2885,7 @@ class FritzFP implements FinalProject{
         } else if(setsOfFiveX < setsOfFiveO){
             return 2;
         } else {
-            return 0; // no one won 
+            return 100; // no one won 
         }
     }
 }
