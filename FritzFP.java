@@ -24,10 +24,11 @@ class FritzFP implements FinalProject{
             }
             
             if(boardHasNPieces(0)){
-                myMove[0] = 9;
-                myMove[1] = 9;
+                int[] possibleIdx = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+                myMove[0] = possibleIdx[random.nextInt(12)];
+                myMove[1] = possibleIdx[random.nextInt(12)];
                 return myMove;
-            } else if(cornerOpen()){
+            } else if(playerTwoOpen()){
                 myMove = this.freeSpace;
                 return myMove;
             } else if(computerCanWin()){
@@ -123,10 +124,11 @@ class FritzFP implements FinalProject{
             }
         
             if(boardHasNPieces(0)){
-                myMove[0] = 9;
-                myMove[1] = 9;
+                int[] possibleIdx = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+                myMove[0] = possibleIdx[random.nextInt(12)];
+                myMove[1] = possibleIdx[random.nextInt(12)];
                 return myMove;
-            } else if(cornerOpen()){
+            } else if(playerTwoOpen()){
                 myMove = this.freeSpace;
                 return myMove;
             } else if(computerCanWinLong()){
@@ -252,38 +254,242 @@ class FritzFP implements FinalProject{
         
     // Private Methods
 
-    private boolean cornerOpen(){
+    private boolean playerTwoOpen(){
+        int firstRowIdx = 100;
+        int firstColumnIdx = 100;
         if(boardHasNPieces(1)){
-            for(int i = 2; i < 18; i++){
-                for(int j = 2; j < 18; j++){
+            for(int i = 0; i < 20; i++){
+                for(int j = 0; j < 20; j++){
                     if(this.board[i][j] == 'X'){ // find the first piece
-                        int firstRowIdx = i;
-                        int firstColumnIdx = j;
-                        
-                        int randomValue = this.random.nextInt(4);
-                        if(randomValue == 0){
-                            this.freeSpace[0] = firstRowIdx-1;
-                            this.freeSpace[1] = firstColumnIdx-1;
-                            return true;
-                        } else if(randomValue == 1){
-                            this.freeSpace[0] = firstRowIdx+1;
-                            this.freeSpace[1] = firstColumnIdx+1;
-                            return true;
-                        } else if(randomValue == 2){
-                            this.freeSpace[0] = firstRowIdx-1;
-                            this.freeSpace[1] = firstColumnIdx+1;
-                            return true;
-                        } else {
-                            this.freeSpace[0] = firstRowIdx+1;
-                            this.freeSpace[1] = firstColumnIdx-1;
-                            return true;
-                        }
+                        firstRowIdx = i;
+                        firstColumnIdx = j;
                     }
                 }
             }
-            this.freeSpace[0] = 9;
-            this.freeSpace[1] = 9;
-            return true;
+            if(firstRowIdx > 4 && firstColumnIdx > 4 && firstRowIdx < 15 && firstColumnIdx < 15){
+                int randomValue = this.random.nextInt(4);
+                if(randomValue == 0){
+                    this.freeSpace[0] = firstRowIdx-1;
+                    this.freeSpace[1] = firstColumnIdx-1;
+                    return true;
+                } else if(randomValue == 1){
+                    this.freeSpace[0] = firstRowIdx+1;
+                    this.freeSpace[1] = firstColumnIdx+1;
+                    return true;
+                } else if(randomValue == 2){
+                    this.freeSpace[0] = firstRowIdx-1;
+                    this.freeSpace[1] = firstColumnIdx+1;
+                    return true;
+                } else {
+                    this.freeSpace[0] = firstRowIdx+1;
+                    this.freeSpace[1] = firstColumnIdx-1;
+                    return true;
+                }
+            } else if(firstRowIdx < 4 && firstColumnIdx < 4 && firstRowIdx == firstColumnIdx){
+                this.freeSpace[0] = 4;
+                this.freeSpace[1] = 4;
+                return true;
+            } else if(firstRowIdx < 4 && firstColumnIdx > 15 && firstRowIdx == 19-firstColumnIdx){
+                this.freeSpace[0] = 4;
+                this.freeSpace[1] = 15;
+                return true;
+            } else if(firstRowIdx > 15 && firstColumnIdx > 15 && firstRowIdx == firstColumnIdx){
+                this.freeSpace[0] = 15;
+                this.freeSpace[1] = 15;
+                return true;
+            } else if(firstRowIdx > 15 && firstColumnIdx < 4 && 19-firstRowIdx == firstColumnIdx){
+                this.freeSpace[0] = 15;
+                this.freeSpace[1] = 4;
+                return true;
+            } else if(firstRowIdx > 3 && firstRowIdx < 10 && firstColumnIdx < 4){
+                this.freeSpace[0] = firstRowIdx+(4-firstColumnIdx);
+                this.freeSpace[1] = 4;
+                return true;
+            } else if(firstRowIdx > 9 && firstRowIdx < 16 && firstColumnIdx < 4){
+                this.freeSpace[0] = firstRowIdx-(4-firstColumnIdx);
+                this.freeSpace[1] = 4;
+                return true;
+            } else if(firstRowIdx > 3 && firstRowIdx < 10 && firstColumnIdx > 15){
+                this.freeSpace[0] = firstRowIdx+(4-(19-firstColumnIdx));
+                this.freeSpace[1] = 15;
+                return true;
+            } else if(firstRowIdx > 9 && firstRowIdx < 16 && firstColumnIdx > 15){
+                this.freeSpace[0] = firstRowIdx-(4-(19-firstColumnIdx));
+                this.freeSpace[1] = 15;
+                return true;
+            } else if(firstColumnIdx > 3 && firstColumnIdx < 10 && firstRowIdx < 4){
+                this.freeSpace[0] = 4;
+                this.freeSpace[1] = firstColumnIdx+(4-firstRowIdx);
+                return true;
+            } else if(firstColumnIdx > 9 && firstColumnIdx < 16 && firstRowIdx < 4){
+                this.freeSpace[0] = 4;
+                this.freeSpace[1] = firstColumnIdx-(4-firstRowIdx);
+                return true;
+            } else if(firstColumnIdx > 3 && firstColumnIdx < 10 && firstRowIdx > 15){
+                this.freeSpace[0] = 15;
+                this.freeSpace[1] = firstColumnIdx+(4-(19-firstRowIdx));
+                return true;
+            } else if(firstColumnIdx > 9 && firstColumnIdx < 16 && firstRowIdx > 15){
+                this.freeSpace[0] = 15;
+                this.freeSpace[1] = firstColumnIdx-(4-(19-firstRowIdx));
+                return true;
+            } else if(firstRowIdx == 4 && firstColumnIdx > 4 && firstColumnIdx < 15){
+                int randomValue = this.random.nextInt(2);
+                if(randomValue == 0){
+                    this.freeSpace[0] = 5;
+                    this.freeSpace[1] = firstColumnIdx+1;
+                    return true;
+                } else {
+                    this.freeSpace[0] = 5;
+                    this.freeSpace[1] = firstColumnIdx-1;
+                    return true;
+                }
+            } else if(firstRowIdx == 15 && firstColumnIdx > 4 && firstColumnIdx < 15){
+                int randomValue = this.random.nextInt(2);
+                if(randomValue == 0){
+                    this.freeSpace[0] = 14;
+                    this.freeSpace[1] = firstColumnIdx+1;
+                    return true;
+                } else {
+                    this.freeSpace[0] = 14;
+                    this.freeSpace[1] = firstColumnIdx-1;
+                    return true;
+                }
+            } else if(firstColumnIdx == 4 && firstRowIdx > 4 && firstRowIdx < 15){
+                int randomValue = this.random.nextInt(2);
+                if(randomValue == 0){
+                    this.freeSpace[0] = firstRowIdx+1;
+                    this.freeSpace[1] = 5;
+                    return true;
+                } else {
+                    this.freeSpace[0] = firstRowIdx-1;
+                    this.freeSpace[1] = 5;
+                    return true;
+                }
+            } else if(firstColumnIdx == 15 && firstRowIdx > 4 && firstRowIdx < 15){
+                int randomValue = this.random.nextInt(2);
+                if(randomValue == 0){
+                    this.freeSpace[0] = firstRowIdx+1;
+                    this.freeSpace[1] = 14;
+                    return true;
+                } else {
+                    this.freeSpace[0] = firstRowIdx-1;
+                    this.freeSpace[1] = 14;
+                    return true;
+                }
+            } else if(firstRowIdx == 4 && firstColumnIdx == 4){
+                this.freeSpace[0] = 5;
+                this.freeSpace[1] = 5;
+                return true;
+            } else if(firstRowIdx == 4 && firstColumnIdx == 15){
+                this.freeSpace[0] = 5;
+                this.freeSpace[1] = 14;
+                return true;
+            } else if(firstRowIdx == 15 && firstColumnIdx == 15){
+                this.freeSpace[0] = 14;
+                this.freeSpace[1] = 14;
+                return true;
+            } else if(firstRowIdx == 15 && firstColumnIdx == 4){
+                this.freeSpace[0] = 14;
+                this.freeSpace[1] = 5;
+                return true;
+            } else if((firstColumnIdx == 0 && firstRowIdx == 1) || (firstColumnIdx == 1 && firstRowIdx == 2) || (firstColumnIdx == 2 && firstRowIdx == 3)){
+                this.freeSpace[0] = 5;
+                this.freeSpace[1] = 4;
+                return true;
+            } else if((firstColumnIdx == 0 && firstRowIdx == 2) || (firstColumnIdx == 1 && firstRowIdx == 3)){
+                this.freeSpace[0] = 6;
+                this.freeSpace[1] = 4;
+                return true;
+            } else if(firstColumnIdx == 0 && firstRowIdx == 3){
+                this.freeSpace[0] = 7;
+                this.freeSpace[1] = 4;
+                return true;
+            } else if((firstColumnIdx == 1 && firstRowIdx == 0) || (firstColumnIdx == 2 && firstRowIdx == 1) || (firstColumnIdx == 3 && firstRowIdx == 2)){
+                this.freeSpace[0] = 4;
+                this.freeSpace[1] = 5;
+                return true;
+            } else if((firstColumnIdx == 2 && firstRowIdx == 0) || (firstColumnIdx == 3 && firstRowIdx == 1)){
+                this.freeSpace[0] = 4;
+                this.freeSpace[1] = 6;
+                return true;
+            } else if(firstColumnIdx == 3 && firstRowIdx == 0){
+                this.freeSpace[0] = 4;
+                this.freeSpace[1] = 7;
+                return true;
+            } else if((firstColumnIdx == 18 && firstRowIdx == 0) || (firstColumnIdx == 17 && firstRowIdx == 1) || (firstColumnIdx == 16 && firstRowIdx == 2)){
+                this.freeSpace[0] = 4;
+                this.freeSpace[1] = 14;
+                return true;
+            } else if((firstColumnIdx == 17 && firstRowIdx == 0) || (firstColumnIdx == 16 && firstRowIdx == 1)){
+                this.freeSpace[0] = 4;
+                this.freeSpace[1] = 13;
+                return true;
+            } else if(firstColumnIdx == 16 && firstRowIdx == 0){
+                this.freeSpace[0] = 4;
+                this.freeSpace[1] = 12;
+                return true;
+            } else if((firstColumnIdx == 0 && firstRowIdx == 18) || (firstColumnIdx == 1 && firstRowIdx == 17) || (firstColumnIdx == 2 && firstRowIdx == 16)){
+                this.freeSpace[0] = 14;
+                this.freeSpace[1] = 4;
+                return true;
+            } else if((firstColumnIdx == 0 && firstRowIdx == 17) || (firstColumnIdx == 1 && firstRowIdx == 16)){
+                this.freeSpace[0] = 13;
+                this.freeSpace[1] = 4;
+                return true;
+            } else if(firstColumnIdx == 0 && firstRowIdx == 16){
+                this.freeSpace[0] = 12;
+                this.freeSpace[1] = 4;
+                return true;
+            } else if((firstColumnIdx == 1 && firstRowIdx == 19) || (firstColumnIdx == 2 && firstRowIdx == 18) || (firstColumnIdx == 3 && firstRowIdx == 17)){
+                this.freeSpace[0] = 15;
+                this.freeSpace[1] = 5;
+                return true;
+            } else if((firstColumnIdx == 2 && firstRowIdx == 19) || (firstColumnIdx == 3 && firstRowIdx == 18)){
+                this.freeSpace[0] = 15;
+                this.freeSpace[1] = 6;
+                return true;
+            } else if(firstColumnIdx == 3 && firstRowIdx == 19){
+                this.freeSpace[0] = 15;
+                this.freeSpace[1] = 7;
+                return true;
+            } else if((firstColumnIdx == 19 && firstRowIdx == 1) || (firstColumnIdx == 18 && firstRowIdx == 2) || (firstColumnIdx == 17 && firstRowIdx == 3)){
+                this.freeSpace[0] = 5;
+                this.freeSpace[1] = 15;
+                return true;
+            } else if((firstColumnIdx == 19 && firstRowIdx == 2) || (firstColumnIdx == 18 && firstRowIdx == 3)){
+                this.freeSpace[0] = 6;
+                this.freeSpace[1] = 15;
+                return true;
+            } else if(firstColumnIdx == 19 && firstRowIdx == 3){
+                this.freeSpace[0] = 7;
+                this.freeSpace[1] = 15;
+                return true;
+            } else if((firstColumnIdx == 19 && firstRowIdx == 18) || (firstColumnIdx == 18 && firstRowIdx == 17) || (firstColumnIdx == 17 && firstRowIdx == 16)){
+                this.freeSpace[0] = 14;
+                this.freeSpace[1] = 15;
+                return true;
+            } else if((firstColumnIdx == 19 && firstRowIdx == 17) || (firstColumnIdx == 18 && firstRowIdx == 16)){
+                this.freeSpace[0] = 13;
+                this.freeSpace[1] = 15;
+                return true;
+            } else if(firstColumnIdx == 19 && firstRowIdx == 16){
+                this.freeSpace[0] = 12;
+                this.freeSpace[1] = 15;
+                return true;
+            } else if((firstColumnIdx == 18 && firstRowIdx == 19) || (firstColumnIdx == 17 && firstRowIdx == 18) || (firstColumnIdx == 16 && firstRowIdx == 17)){
+                this.freeSpace[0] = 15;
+                this.freeSpace[1] = 14;
+                return true;
+            } else if((firstColumnIdx == 17 && firstRowIdx == 19) || (firstColumnIdx == 16 && firstRowIdx == 18)){
+                this.freeSpace[0] = 15;
+                this.freeSpace[1] = 13;
+                return true;
+            } else if(firstColumnIdx == 16 && firstRowIdx == 19){
+                this.freeSpace[0] = 15;
+                this.freeSpace[1] = 12;
+                return true;
+            }
         } 
         return false;   
     }
@@ -2885,7 +3091,7 @@ class FritzFP implements FinalProject{
         } else if(setsOfFiveX < setsOfFiveO){
             return 2;
         } else {
-            return 100; // no one won 
+            return 0; // no one won 
         }
     }
 }
