@@ -23,12 +23,7 @@ class FritzFP implements FinalProject{
                 this.opponentPiece = 'X';
             }
             
-            if(boardHasNPieces(0)){
-                int[] possibleIdx = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-                myMove[0] = possibleIdx[random.nextInt(12)];
-                myMove[1] = possibleIdx[random.nextInt(12)];
-                return myMove;
-            } else if(playerTwoOpen()){
+            if(playerOneOpen() || playerTwoOpen()){
                 myMove = this.freeSpace;
                 return myMove;
             } else if(computerCanWin()){
@@ -123,12 +118,7 @@ class FritzFP implements FinalProject{
                 this.opponentPiece = 'X';
             }
         
-            if(boardHasNPieces(0)){
-                int[] possibleIdx = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-                myMove[0] = possibleIdx[random.nextInt(12)];
-                myMove[1] = possibleIdx[random.nextInt(12)];
-                return myMove;
-            } else if(playerTwoOpen()){
+            if(playerOneOpen() || playerTwoOpen()){
                 myMove = this.freeSpace;
                 return myMove;
             } else if(computerCanWinLong()){
@@ -254,6 +244,17 @@ class FritzFP implements FinalProject{
         }
         
     // Private Methods
+
+    private boolean playerOneOpen(){
+        if(boardHasNPieces(0)){
+            int[] possibleIdx = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+            this.freeSpace[0] = possibleIdx[random.nextInt(12)];
+            this.freeSpace[1] = possibleIdx[random.nextInt(12)];
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     private boolean playerTwoOpen(){
         int firstRowIdx = 100;
