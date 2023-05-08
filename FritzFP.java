@@ -42,7 +42,7 @@ class FritzFP implements FinalProject{
                 // if so, make four
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(opponentHasThree()){ 
+            } else if(hasThreeInFive(this.opponentPiece)){ 
                 // check if the opponent has three in a set of five
                 // if unblocked, block three
                 myMove = this.freeSpace;
@@ -65,7 +65,7 @@ class FritzFP implements FinalProject{
                 // block intersection
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(computerHasThree()){
+            } else if(hasThreeInFive(this.computerPiece)){
                 // check if the computer has three in a set of five
                 // make four
                 myMove = this.freeSpace;
@@ -149,7 +149,7 @@ class FritzFP implements FinalProject{
                 // if neither side is blocked, make four (this scenario gurantees that the computer will get 5)
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(opponentHasThree() || hasEightInTen(this.opponentPiece)){ // need to make opponentHasEight(), opponentHasThirteen(), and opponentHasEighteen() methods
+            } else if(hasThreeInFive(this.opponentPiece) || hasEightInTen(this.opponentPiece)){ // need to make opponentHasThirteen(), and opponentHasEighteen() methods
                 // check if the opponent has unblocked three in a set of five
                 // if so, block three
                 myMove = this.freeSpace;
@@ -172,12 +172,7 @@ class FritzFP implements FinalProject{
                 // block intersection
                 myMove = this.freeSpace;
                 return myMove;
-            }  else if(computerHasEightInARow()){ // need to make computerHasEight(), computerHasThirteen(), and computerHasEighteen() methods
-                // check if the computer has eight in a row with a blank space on both sides
-                // if so, make nine
-                myMove = this.freeSpace;
-                return myMove;
-            } else if(computerHasThree()){ // need to make computerHasEight(), computerHasThirteen(), and computerHasEighteen() methods
+            } else if(hasThreeInFive(this.computerPiece) || hasEightInTen(this.computerPiece)){ // need to make computerHasThirteen(), and computerHasEighteen() methods
                 // check if the computer has three in a set of five
                 // make four
                 myMove = this.freeSpace;
@@ -669,64 +664,64 @@ class FritzFP implements FinalProject{
         }
     }
 
-    private boolean computerHasEightInARow(){ 
-        // if the computer has eight in a row make nine
-        if(findRowOfN(8, this.computerPiece)){
-            return true;
-        } else if(findColumnOfN(8, this.computerPiece)){
-            return true;
-        } else if(findDiagonalDownOfN(8, this.computerPiece)){
-            return true;
-        } else if(findDiagonalUpOfN(8, this.computerPiece)){
-            return true;
-        } else {
-            return false;
-        }
-    } 
-
     private boolean hasEightInTen(char piece){
-        if(setOfEightInTen("row", piece)){
-            return true;
-        } else if(setOfEightInTen("column", piece)){
-            return true;
-        } else if(setOfEightInTen("diagonalDown", piece)){
-            return true;
-        } else if(setOfEightInTen("diagonalUp", piece)){
-            return true;
+        if(piece == this.computerPiece){
+            if(setOfEightInTen("row", piece)){
+                return true;
+            } else if(setOfEightInTen("column", piece)){
+                return true;
+            } else if(setOfEightInTen("diagonalDown", piece)){
+                return true;
+            } else if(setOfEightInTen("diagonalUp", piece)){
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            return false;
+            // don't prevent 9 from being formed if one side is blocked 
+            if(setOfEightUnblockedInTen("row", piece)){
+                return true;
+            } else if(setOfEightUnblockedInTen("column", piece)){
+                return true;
+            } else if(setOfEightUnblockedInTen("diagonalDown", piece)){
+                return true;
+            } else if(setOfEightUnblockedInTen("diagonalUp", piece)){
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
-    private boolean opponentHasThree(){ 
-        // don't prevent 4 from being formed if one side is blocked 
-        // this should check the following cases
-        // -X-X-X-, --XXX-, -XXX--, -XX-X-, -X-XX- for rows, columns, and diagonals 
-        if(setOfThreeUnblockedInFive("row", this.opponentPiece)){
-            return true;
-        } else if(setOfThreeUnblockedInFive("column", this.opponentPiece)){
-            return true;
-        } else if(setOfThreeUnblockedInFive("diagonalDown", this.opponentPiece)){
-            return true;
-        } else if(setOfThreeUnblockedInFive("diagonalUp", this.opponentPiece)){
-            return true;
+    private boolean hasThreeInFive(char piece){
+        if(piece == this.computerPiece){
+            // check senarios O-O-O, OOO--, -OOO-, --OOO, OO-O-, O-OO-, -O-OO, -OO-O for rows, columns, and diagonals
+            if(setOfThreeComputerPieceInFive("row")){
+                return true;
+            } else if(setOfThreeComputerPieceInFive("column")){
+                return true;
+            } else if(setOfThreeComputerPieceInFive("diagonalDown")){
+                return true;
+            } else if(setOfThreeComputerPieceInFive("diagonalUp")){
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            return false;
-        }
-    }
-
-    private boolean computerHasThree(){
-        // check senarios O-O-O, OOO--, -OOO-, --OOO, OO-O-, O-OO-, -O-OO, -OO-O for rows, columns, and diagonals
-        if(setOfThreeComputerPieceInFive("row")){
-            return true;
-        } else if(setOfThreeComputerPieceInFive("column")){
-            return true;
-        } else if(setOfThreeComputerPieceInFive("diagonalDown")){
-            return true;
-        } else if(setOfThreeComputerPieceInFive("diagonalUp")){
-            return true;
-        } else {
-            return false;
+            // don't prevent 4 from being formed if one side is blocked 
+            // this should check the following cases
+            // -X-X-X-, --XXX-, -XXX--, -XX-X-, -X-XX- for rows, columns, and diagonals 
+            if(setOfThreeUnblockedInFive("row", this.opponentPiece)){
+                return true;
+            } else if(setOfThreeUnblockedInFive("column", this.opponentPiece)){
+                return true;
+            } else if(setOfThreeUnblockedInFive("diagonalDown", this.opponentPiece)){
+                return true;
+            } else if(setOfThreeUnblockedInFive("diagonalUp", this.opponentPiece)){
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -1669,7 +1664,7 @@ class FritzFP implements FinalProject{
         }
     }
 
-    private boolean setOfEightInTen(String type, char piece){
+    private boolean setOfEightUnblockedInTen(String type, char piece){
         char[] fullSet;
         int rowIdx;
         int columnIdx;
@@ -1776,6 +1771,134 @@ class FritzFP implements FinalProject{
                 }
 
                 for(int i = 1; i < fullSet.length-1; i++){ 
+                    if(piecesInSet == 8 && blanks == 2){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 2) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 2){
+                        blanks++;
+                        int[] singleSpot = {rowIdx-i, columnIdx+i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean setOfEightInTen(String type, char piece){
+        char[] fullSet;
+        int rowIdx;
+        int columnIdx;
+        int blanks;
+        int[][] spots = new int[2][2];
+        int piecesInSet;
+
+        char opposingPiece;
+        if(piece == 'X'){
+            opposingPiece = 'O';
+        } else {
+            opposingPiece = 'X';
+        }
+
+        if(type == "row"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getRow(j);
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 8 && blanks == 2){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 2) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 2){
+                        blanks++;
+                        int[] singleSpot = {j, i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else if(type == "column"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getColumn(j);
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 8 && blanks == 2){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 2) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 2){
+                        blanks++;
+                        int[] singleSpot = {i, j};
+                        spots[blanks-1] = singleSpot;
+                    }  
+                }
+            } 
+            return false;   
+        } else if(type == "diagonalDown"){ 
+            for(int j = 5; j < 26; j++){
+                fullSet = getDiagonalDown(j);
+                blanks = 0;
+                piecesInSet = 0;
+            
+                if(j <= 15){
+                    rowIdx = 15-j;
+                    columnIdx = 0;
+                } else {
+                    rowIdx = 0;
+                    columnIdx = j-15;
+                }
+
+                for(int i = 0; i < fullSet.length; i++){ 
+                    if(piecesInSet == 8 && blanks == 2){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 2) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 2){
+                        blanks++;
+                        int[] singleSpot = {rowIdx+i, columnIdx+i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else if(type == "diagonalUp"){ 
+            for(int j = 5; j < 26; j++){
+                fullSet = getDiagonalUp(j);
+                blanks = 0;
+                piecesInSet = 0;
+            
+                if(j <= 15){
+                    rowIdx = j+4;
+                    columnIdx = 0;
+                } else {
+                    rowIdx = 19;
+                    columnIdx = j-15;
+                }
+
+                for(int i = 0; i < fullSet.length; i++){ 
                     if(piecesInSet == 8 && blanks == 2){ 
                         this.freeSpace = pickOptimalSpot(spots, piece); 
                         return true;
