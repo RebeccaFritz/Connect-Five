@@ -48,10 +48,20 @@ class FritzFP implements FinalProject{
                 myMove = this.freeSpace;
                 return myMove;
             } else if(hasIntersectingTwos(this.computerPiece)){
+                /* checks scenarios as such:
+                 * -O-O-
+                 * -OO--
+                 * -----
+                 */
                 // create intersection
                 myMove = this.freeSpace;
                 return myMove;
             } else if(hasIntersectingTwos(this.opponentPiece)){
+                /* checks scenarios as such:
+                 * -O-O-
+                 * -OO--
+                 * -----
+                 */
                 // block intersection
                 myMove = this.freeSpace;
                 return myMove;
@@ -139,11 +149,6 @@ class FritzFP implements FinalProject{
                 // if neither side is blocked, make four (this scenario gurantees that the computer will get 5)
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(computerHasEightInARow()){ // need to make computerHasEight(), computerHasThirteen(), and computerHasEighteen() methods
-                // check if the computer has eight in a row with a blank space on both sides
-                // if so, make nine
-                myMove = this.freeSpace;
-                return myMove;
             } else if(opponentHasEightInARow()){ // need to make opponentHasEight(), opponentHasThirteen(), and opponentHasEighteen() methods
                 // check if the opponent has eight in a row with a blank space on both sides
                 // if so, block eight
@@ -154,23 +159,30 @@ class FritzFP implements FinalProject{
                 // if so, block three
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(hasIntersectingSevens(this.computerPiece)){
+            } else if(hasIntersectingSevens(this.computerPiece) || hasIntersectingTwos(this.computerPiece)){
+                /* checks scenarios as such:
+                 * -O-O-
+                 * -OO--
+                 * -----
+                 */
                 // make intersection
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(hasIntersectingSevens(this.opponentPiece)){
+            } else if(hasIntersectingSevens(this.opponentPiece) || hasIntersectingTwos(this.opponentPiece)){
+                /* checks scenarios as such:
+                 * -O-O-
+                 * -OO--
+                 * -----
+                 */
                 // block intersection
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(hasIntersectingTwos(this.computerPiece)){
-                // make intersection
+            }  else if(computerHasEightInARow()){ // need to make computerHasEight(), computerHasThirteen(), and computerHasEighteen() methods
+                // check if the computer has eight in a row with a blank space on both sides
+                // if so, make nine
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(hasIntersectingTwos(this.opponentPiece)){
-                // block intersection
-                myMove = this.freeSpace;
-                return myMove;
-            }  else if(computerHasThree()){ // need to make computerHasEight(), computerHasThirteen(), and computerHasEighteen() methods
+            } else if(computerHasThree()){ // need to make computerHasEight(), computerHasThirteen(), and computerHasEighteen() methods
                 // check if the computer has three in a set of five
                 // make four
                 myMove = this.freeSpace;
