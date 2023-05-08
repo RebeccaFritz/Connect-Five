@@ -14,8 +14,6 @@ class FritzFP implements FinalProject{
         public int[] playShortGame(char[][] b, int player){
             int[] myMove = new int[2];
             this.board = b;
-
-            long startTime = System.currentTimeMillis(); 
         
             if(player == 1){
                 this.computerPiece = 'X';
@@ -45,7 +43,7 @@ class FritzFP implements FinalProject{
                 myMove = this.freeSpace;
                 return myMove;
             } else if(computerCanMakeFourInARow()){
-                // check if the computer has can mak four unblocked in a row
+                // check if the computer has can make four unblocked in a row
                 // if so, make four
                 myMove = this.freeSpace;
                 return myMove;
@@ -64,17 +62,17 @@ class FritzFP implements FinalProject{
                 return myMove;
             } else if(computerHasThree()){
                 // check if the computer has three in a set of five
-                // if not blocked, make four
+                // make four
                 myMove = this.freeSpace;
                 return myMove;
             } else if(computerHasTwo()){
                 // check if the computer has two in a set of five
-                // if not blocked, make three
+                // make three
                 myMove = this.freeSpace;
                 return myMove;
             } else if(computerHasOne()){
                 // check if the computer has one piece in a set of five
-                // if not blocked, make two
+                // make two
                 myMove = this.freeSpace;
                 return myMove;
             } else {
@@ -134,28 +132,29 @@ class FritzFP implements FinalProject{
                 myMove = this.freeSpace;
                 return myMove;
             } else if(computerCanWinLong()){
-                // check if the computer has four, nine, fourteen, or nineteen
-                // if so, take win
+                // check if the computer has 4, 9, 14, or 19 
+                // with a free space on at least one side
+                // if so, make 5, 10, 15, or 20 (respectively)
                 myMove = this.freeSpace;
                 return myMove;
             } else if(opponentCanWinLong()){
                 // block win
-                // if the player has four, nine, fourteen, or nineteen uninterupted pieces
+                // if the opponent has 4, 9, 14, or 19 uninterupted pieces
                 // only block if one side is already blocked 
                 // if the pieces are interrupted block within the interuption
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(computerHasEightInARow()){
+            } else if(computerHasEightInARow()){ 
                 // check if the computer has eight in a row with a blank space on both sides
                 // if so, make nine
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(computerCanMakeFourInARow()){
-                // check if the computer has can make four unblocked in a row
-                // if so, make four
+            } else if(computerCanMakeFourInARow()){ // need to make computerCanMakeNineInARow(), computerCanMakeFourteenInARow(), computerCanMakeNineteenInARow()
+                // check if the computer has can make four in a row
+                // if neither side is blocked, make four (this scenario gurantees that the computer will get 5)
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(opponentHasEightInARow()){
+            } else if(opponentHasEightInARow()){ // need to make opponentHasEight(), opponentHasThirteen(), and opponentHasEighteen() methods
                 // check if the opponent has eight in a row with a blank space on both sides
                 // if so, block eight
                 myMove = this.freeSpace;
@@ -181,19 +180,19 @@ class FritzFP implements FinalProject{
                 // block intersection
                 myMove = this.freeSpace;
                 return myMove;
-            }  else if(computerHasThree()){
+            }  else if(computerHasThree()){ // need to make computerHasEight(), computerHasThirteen(), and computerHasEighteen() methods
                 // check if the computer has three in a set of five
-                // if not blocked, make four
+                // make four
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(computerHasTwo()){
+            } else if(computerHasTwo()){ // need to make computerHasSeven(), computerHasTwelve(), and computerHasSeventeen() methods
                 // check if the computer has two in a set of five
-                // if not blocked, make three
+                // make three
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(computerHasOne()){
+            } else if(computerHasOne()){ // need to make computerHasSix(), computerHasEleven(), and computerHasSixteen() methods
                 // check if the computer has one piece in a set of five
-                // if not blocked, make two
+                // make two
                 myMove = this.freeSpace;
                 return myMove;
             } else {
@@ -647,6 +646,8 @@ class FritzFP implements FinalProject{
     }
 
     private boolean computerCanMakeFourInARow(){ 
+        // This checks the following cases
+        // --OOO-, -OOO--, -O-OO-, -OO-O-, O--OO-, -OO--O 
         if(setOfThreeUnblockedInFive("row", this.computerPiece)){
             return true;
         } else if(setOfThreeUnblockedInFive("column", this.computerPiece)){
