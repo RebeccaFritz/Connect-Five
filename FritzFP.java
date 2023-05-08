@@ -144,9 +144,9 @@ class FritzFP implements FinalProject{
                 // if the pieces are interrupted block within the interuption
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(computerCanMakeFourUnblockedInARow()){ // need to make computerCanMakeNineUnblockedInARow(), computerCanMakeFourteenUnblockedInARow()
-                // check if the computer has can make four in a row
-                // if neither side is blocked, make four (this scenario gurantees that the computer will get 5)
+            } else if(computerCanMakeFourUnblockedInARow() || computerCanMakeNineUnblockedInARow()){ // need to make computerCanMakeFourteenUnblockedInARow()
+                // check if the computer has 3/8 in a row
+                // if neither side is blocked, make 4/9 (this scenario gurantees that the computer will get 5/10)
                 myMove = this.freeSpace;
                 return myMove;
             } else if(hasThreeInFive(this.opponentPiece) || hasEightInTen(this.opponentPiece)){ // need to make opponentHasThirteen(), and opponentHasEighteen() methods
@@ -642,6 +642,21 @@ class FritzFP implements FinalProject{
         } else if(setOfFourInFive("diagonalDown", this.opponentPiece)){
             return true;
         } else if(setOfFourInFive("diagonalUp", this.opponentPiece)){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean computerCanMakeNineUnblockedInARow(){ 
+        // checks if the computer can make nine in a row with neither side blocked
+        if(setOfEightUnblockedInTen("row", this.computerPiece)){
+            return true;
+        } else if(setOfEightUnblockedInTen("column", this.computerPiece)){
+            return true;
+        } else if(setOfEightUnblockedInTen("diagonalDown", this.computerPiece)){
+            return true;
+        } else if(setOfEightUnblockedInTen("diagonalUp", this.computerPiece)){
             return true;
         } else {
             return false;
