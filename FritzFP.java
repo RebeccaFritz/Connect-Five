@@ -149,7 +149,7 @@ class FritzFP implements FinalProject{
                 // if neither side is blocked, make 4/9/14 (this scenario gurantees that the computer will get 5/10/15)
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(hasThreeInFive(this.opponentPiece) || hasEightInTen(this.opponentPiece) || hasThirteenInFifteen(this.opponentPiece)){ // need to make opponentHasEighteen() method
+            } else if(hasThreeInFive(this.opponentPiece) || hasEightInTen(this.opponentPiece) || hasThirteenInFifteen(this.opponentPiece)){
                 // check if the opponent has unblocked three in a set of five
                 // if so, block three
                 myMove = this.freeSpace;
@@ -172,9 +172,9 @@ class FritzFP implements FinalProject{
                 // block intersection
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(hasThreeInFive(this.computerPiece) || hasEightInTen(this.computerPiece) || hasThirteenInFifteen(this.computerPiece)){ // need to make computerHasEighteen() method
-                // check if the computer has three in a set of five
-                // make four
+            } else if(hasThreeInFive(this.computerPiece) || hasEightInTen(this.computerPiece) || hasThirteenInFifteen(this.computerPiece) || hasEighteenInTwenty(this.computerPiece)){
+                // check if the computer has 3/8/13 in a set of 5/10/15
+                // make 4/9/14 in a set of 5/10/15
                 myMove = this.freeSpace;
                 return myMove;
             } else if(computerHasTwo()){ // need to make computerHasSeven(), computerHasTwelve(), and computerHasSeventeen() methods
@@ -691,6 +691,24 @@ class FritzFP implements FinalProject{
             return true;
         } else {
             return false;
+        }
+    }
+
+    private boolean hasEighteenInTwenty(char piece){
+        if(piece == this.computerPiece){
+            if(setOfEighteenInTwenty("row", piece)){
+                return true;
+            } else if(setOfEighteenInTwenty("column", piece)){
+                return true;
+            } else if(setOfEighteenInTwenty("diagonalDown", piece)){
+                return true;
+            } else if(setOfEighteenInTwenty("diagonalUp", piece)){
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false; // an unblocked set of eighteen in twenty is not possible
         }
     }
 
@@ -1723,6 +1741,128 @@ class FritzFP implements FinalProject{
         }
     }
 
+    private boolean setOfEighteenInTwenty(String type, char piece){
+        char[] fullSet;
+        int rowIdx;
+        int columnIdx;
+        int blanks;
+        int[][] spots = new int[2][2];
+        int piecesInSet;
+
+        char opposingPiece;
+        if(piece == 'X'){
+            opposingPiece = 'O';
+        } else {
+            opposingPiece = 'X';
+        }
+
+        if(type == "row"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getRow(j);
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 18 && blanks == 2){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 2) || fullSet[i] == opposingPiece){
+                        return false;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 2){
+                        blanks++;
+                        int[] singleSpot = {j, i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else if(type == "column"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getColumn(j);
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 18 && blanks == 2){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 2) || fullSet[i] == opposingPiece){
+                        return false;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 2){
+                        blanks++;
+                        int[] singleSpot = {i, j};
+                        spots[blanks-1] = singleSpot;
+                    }  
+                }
+            } 
+            return false;   
+        } else if(type == "diagonalDown"){ 
+            int j = 15;
+            fullSet = getDiagonalDown(j);
+            blanks = 0;
+            piecesInSet = 0;
+        
+            if(j <= 15){
+                rowIdx = 15-j;
+                columnIdx = 0;
+            } else {
+                rowIdx = 0;
+                columnIdx = j-15;
+            }
+
+            for(int i = 0; i < fullSet.length; i++){ 
+                if(piecesInSet == 18 && blanks == 2){ 
+                    this.freeSpace = pickOptimalSpot(spots, piece); 
+                    return true;
+                } else if((fullSet[i] == '.' && blanks >= 2) || fullSet[i] == opposingPiece){
+                    return false;
+                } else if(fullSet[i] == piece){ 
+                    piecesInSet++;
+                } else if(fullSet[i] == '.' && blanks < 2){
+                    blanks++;
+                    int[] singleSpot = {rowIdx+i, columnIdx+i};
+                    spots[blanks-1] = singleSpot;
+                } 
+            }
+            return false;
+        } else if(type == "diagonalUp"){ 
+            int j = 15;
+            fullSet = getDiagonalUp(j);
+            blanks = 0;
+            piecesInSet = 0;
+        
+            if(j <= 15){
+                rowIdx = j+4;
+                columnIdx = 0;
+            } else {
+                rowIdx = 19;
+                columnIdx = j-15;
+            }
+
+            for(int i = 0; i < fullSet.length; i++){ 
+                if(piecesInSet == 18 && blanks == 2){ 
+                    this.freeSpace = pickOptimalSpot(spots, piece); 
+                    return true;
+                } else if((fullSet[i] == '.' && blanks >= 2) || fullSet[i] == opposingPiece){
+                    return false;
+                } else if(fullSet[i] == piece){ 
+                    piecesInSet++;
+                } else if(fullSet[i] == '.' && blanks < 2){
+                    blanks++;
+                    int[] singleSpot = {rowIdx-i, columnIdx+i};
+                    spots[blanks-1] = singleSpot;
+                } 
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
+
     private boolean setOfThirteenUnblockedInFifteen(String type, char piece){
         char[] fullSet;
         int rowIdx;
@@ -1785,7 +1925,7 @@ class FritzFP implements FinalProject{
             } 
             return false;   
         } else if(type == "diagonalDown"){ 
-            for(int j = 5; j < 26; j++){
+            for(int j = 10; j < 21; j++){
                 fullSet = getDiagonalDown(j);
                 blanks = 0;
                 piecesInSet = 0;
@@ -1816,7 +1956,7 @@ class FritzFP implements FinalProject{
             }
             return false;
         } else if(type == "diagonalUp"){ 
-            for(int j = 5; j < 26; j++){
+            for(int j = 10; j < 21; j++){
                 fullSet = getDiagonalUp(j);
                 blanks = 0;
                 piecesInSet = 0;
@@ -1913,7 +2053,7 @@ class FritzFP implements FinalProject{
             } 
             return false;   
         } else if(type == "diagonalDown"){ 
-            for(int j = 5; j < 26; j++){
+            for(int j = 10; j < 21; j++){
                 fullSet = getDiagonalDown(j);
                 blanks = 0;
                 piecesInSet = 0;
@@ -1944,7 +2084,7 @@ class FritzFP implements FinalProject{
             }
             return false;
         } else if(type == "diagonalUp"){ 
-            for(int j = 5; j < 26; j++){
+            for(int j = 10; j < 21; j++){
                 fullSet = getDiagonalUp(j);
                 blanks = 0;
                 piecesInSet = 0;
