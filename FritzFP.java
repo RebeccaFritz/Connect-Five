@@ -26,12 +26,12 @@ class FritzFP implements FinalProject{
             if(playerOneOpen() || playerTwoOpen()){
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(computerCanWin()){
+            } else if(hasFourInFive(this.computerPiece)){ // hasSpecialWinScenario(this.computerPiece)
                 // check if the computer has four in a row
                 // if so, take win
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(opponentCanWin()){
+            } else if(hasFourInFive(this.opponentPiece)){ // hasSpecialWinScenario(this.opponentPiece)
                 // block win
                 // if the player has four uninterupted pieces, only block if one side is already blocked 
                 // if the pieces are interrupted block within the interuption
@@ -131,13 +131,13 @@ class FritzFP implements FinalProject{
             if(playerOneOpen() || playerTwoOpen()){
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(computerCanWinLong()){
+            } else if(computerCanWinLong()){ // hasSpecialWinScenario(this.computerPiece)
                 // check if the computer has 4, 9, 14, or 19 
                 // with a free space on at least one side
                 // if so, make 5, 10, 15, or 20 (respectively)
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(opponentCanWinLong()){
+            } else if(opponentCanWinLong()){ // hasSpecialWinScenario(this.opponentPiece)
                 // block win
                 // if the opponent has 4, 9, 14, or 19 uninterupted pieces
                 // only block if one side is already blocked 
@@ -498,24 +498,38 @@ class FritzFP implements FinalProject{
         return false;   
     }
 
-    private boolean computerCanWin(){
+    private boolean hasSpecialWinScenario(char piece){
+        if(specialWinScenario("row", piece)){
+            return true;
+        } else if(specialWinScenario("column", piece)){
+            return true;
+        } else if(specialWinScenario("diagonalDown", piece)){
+            return true;
+        } else if(specialWinScenario("diagonalUp", piece)){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean hasFourInFive(char piece){
         // checking for 4 in a row with one side free
-        if(findRowOfN(4, this.computerPiece)){
+        if(findRowOfN(4, piece)){
             return true;
-        } else if(findColumnOfN(4, this.computerPiece)){
+        } else if(findColumnOfN(4, piece)){
             return true;
-        } else if(findDiagonalDownOfN(4, this.computerPiece)){
+        } else if(findDiagonalDownOfN(4, piece)){
             return true;
-        } else if(findDiagonalUpOfN(4, this.computerPiece)){
+        } else if(findDiagonalUpOfN(4, piece)){
             return true;
         // checking for four in a set of five
-        } else if(setOfFourInFive("row", this.computerPiece)){
+        } else if(setOfFourInFive("row", piece)){
             return true;
-        } else if(setOfFourInFive("column", this.computerPiece)){
+        } else if(setOfFourInFive("column", piece)){
             return true;
-        } else if(setOfFourInFive("diagonalDown", this.computerPiece)){
+        } else if(setOfFourInFive("diagonalDown", piece)){
             return true;
-        } else if(setOfFourInFive("diagonalUp", this.computerPiece)){
+        } else if(setOfFourInFive("diagonalUp", piece)){
             return true;
         } else {
             return false;
@@ -576,30 +590,6 @@ class FritzFP implements FinalProject{
         } else if(setOfFourInFive("diagonalDown", this.computerPiece)){
             return true;
         } else if(setOfFourInFive("diagonalUp", this.computerPiece)){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private boolean opponentCanWin(){ 
-        // check for four 'X' in a row with a free space on one side
-        if(findRowOfN(4, this.opponentPiece)){
-            return true;
-        } else if(findColumnOfN(4, this.opponentPiece)){
-            return true;
-        } else if(findDiagonalDownOfN(4, this.opponentPiece)){
-            return true;
-        } else if(findDiagonalUpOfN(4, this.opponentPiece)){
-            return true;
-        // checking for XX-XX, X-XXX, XXX-X in rows, columns, and diagonals
-        } else if(setOfFourInFive("row", this.opponentPiece)){
-            return true;
-        } else if(setOfFourInFive("column", this.opponentPiece)){
-            return true;
-        } else if(setOfFourInFive("diagonalDown", this.opponentPiece)){
-            return true;
-        } else if(setOfFourInFive("diagonalUp", this.opponentPiece)){
             return true;
         } else {
             return false;
@@ -3229,6 +3219,317 @@ class FritzFP implements FinalProject{
         }
     }
 
+    private boolean specialWinScenario(String type, char piece){ 
+        char[] fullSet;
+        int rowIdx;
+        int columnIdx;
+        if(type == "row"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getRow(j);
+                this.freeSpace[0] = j;
+
+                for(int i = 0; i < 20; i++){
+                    this.freeSpace[1] = i;
+                    if(i > 3 && i < 16 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check senario -OOO-OOO-
+                        return true;
+                    } else if (i == 3 && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check senario OOO-OOO- where the left is the wall
+                        return true;
+                    } else if (i == 16 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece){ // check senario -OOO-OOO where the right is the wall
+                        return true;
+                    } else if(i > 4 && i < 15 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario -OOOO-OOOO-
+                        return true;
+                    } else if(i == 4 && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario OOOO-OOOO- where the left is the wall
+                        return true;
+                    } else if(i == 15 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check scenario -OOOO-OOOO where the right is the wall
+                        return true;
+                    } else if(i > 3 && i < 15 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario -OOO-OOOO-
+                        return true;
+                    } else if(i == 3 && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario OOO-OOOO- where the left is the wall
+                        return true;
+                    } else if(i == 15 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check scenario -OOO-OOOO where the right is the wall
+                        return true;
+                    } else if(i > 4 && i < 16 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check scenario -OOOO-OOO-
+                        return true;
+                    } else if(i == 4 && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check scenario OOOO-OOO- where the left is the wall
+                        return true;
+                    } else if(i == 16 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece){ // check scenario -OOOO-OOO- where the right is the wall
+                        return true;
+                    } else if(i > 3 && i < 17 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] != piece){ // check scenario -OOO-OO-
+                        return true;
+                    } else if(i == 3 && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] != piece){ // check scenario OOO-OO- where the left is the wall
+                        return true;
+                    } else if(i == 17 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece){ // check scenario -OOO-OO where the right is the wall
+                        return true;
+                    } else if(i > 2 && i < 16 && fullSet[i-3] != piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check scenario -OO-OOO-
+                        return true;
+                    } else if(i == 2 && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check scenario OO-OOO- where the left is the wall
+                        return true;
+                    } else if(i == 16 && fullSet[i-3] != piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece){ // check scenario -OO-OOO where the right is the wall
+                        return true;
+                    } else if(i > 4 && i < 17 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] != piece){ // check scenario -OOOO-OO-
+                        return true;
+                    } else if(i == 4 && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] != piece){ // check scenario OOOO-OO- where the left is the wall
+                        return true;
+                    } else if(i == 17 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece){ // check scenario -OOOO-OO where the right is the wall
+                        return true;
+                    } else if(i > 2 && i < 15 && fullSet[i-3] != piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario -OO-OOOO-
+                        return true;
+                    } else if(i == 2 && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario OO-OOOO- where the left is the wall
+                        return true;
+                    } else if(i == 15 && fullSet[i-3] != piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check scenario -OO-OOOO where the right is the wall
+                        return true;
+                    } else if(i > 1 && i < 15 && fullSet[i-2] != piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario -O-OOOO-
+                        return true;
+                    } else if(i == 1 && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario O-OOOO- where the left is the wall
+                        return true;
+                    } else if(i == 15 && fullSet[i-2] != piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check scenario -O-OOOO where the right is the wall
+                        return true;
+                    } else if(i > 4 && i < 18 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] != piece){ // check scenario -OOOO-O-
+                        return true;
+                    } else if(i == 4 && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] != piece){ // check scenario OOOO-O- where the left is the wall
+                        return true;
+                    } else if(i == 18 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece){ // check scenario -OOOO-O where the right is the wall
+                        return true;
+                    }
+                }
+            }
+            return false;
+        } else if(type == "column"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getColumn(j);
+                this.freeSpace[1] = j;
+
+                for(int i = 0; i < 15; i++){
+                    this.freeSpace[0] = i;
+                    if(i > 3 && i < 16 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check senario -OOO-OOO-
+                        return true;
+                    } else if (i == 3 && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check senario OOO-OOO- where the left is the wall
+                        return true;
+                    } else if (i == 16 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece){ // check senario -OOO-OOO where the right is the wall
+                        return true;
+                    } else if(i > 4 && i < 15 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario -OOOO-OOOO-
+                        return true;
+                    } else if(i == 4 && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario OOOO-OOOO- where the left is the wall
+                        return true;
+                    } else if(i == 15 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check scenario -OOOO-OOOO where the right is the wall
+                        return true;
+                    } else if(i > 3 && i < 15 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario -OOO-OOOO-
+                        return true;
+                    } else if(i == 3 && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario OOO-OOOO- where the left is the wall
+                        return true;
+                    } else if(i == 15 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check scenario -OOO-OOOO where the right is the wall
+                        return true;
+                    } else if(i > 4 && i < 16 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check scenario -OOOO-OOO-
+                        return true;
+                    } else if(i == 4 && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check scenario OOOO-OOO- where the left is the wall
+                        return true;
+                    } else if(i == 16 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece){ // check scenario -OOOO-OOO- where the right is the wall
+                        return true;
+                    } else if(i > 3 && i < 17 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] != piece){ // check scenario -OOO-OO-
+                        return true;
+                    } else if(i == 3 && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] != piece){ // check scenario OOO-OO- where the left is the wall
+                        return true;
+                    } else if(i == 17 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece){ // check scenario -OOO-OO where the right is the wall
+                        return true;
+                    } else if(i > 2 && i < 16 && fullSet[i-3] != piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check scenario -OO-OOO-
+                        return true;
+                    } else if(i == 2 && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check scenario OO-OOO- where the left is the wall
+                        return true;
+                    } else if(i == 16 && fullSet[i-3] != piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece){ // check scenario -OO-OOO where the right is the wall
+                        return true;
+                    } else if(i > 4 && i < 17 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] != piece){ // check scenario -OOOO-OO-
+                        return true;
+                    } else if(i == 4 && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] != piece){ // check scenario OOOO-OO- where the left is the wall
+                        return true;
+                    } else if(i == 17 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece){ // check scenario -OOOO-OO where the right is the wall
+                        return true;
+                    } else if(i > 2 && i < 15 && fullSet[i-3] != piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario -OO-OOOO-
+                        return true;
+                    } else if(i == 2 && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario OO-OOOO- where the left is the wall
+                        return true;
+                    } else if(i == 15 && fullSet[i-3] != piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check scenario -OO-OOOO where the right is the wall
+                        return true;
+                    } else if(i > 1 && i < 15 && fullSet[i-2] != piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario -O-OOOO-
+                        return true;
+                    } else if(i == 1 && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario O-OOOO- where the left is the wall
+                        return true;
+                    } else if(i == 15 && fullSet[i-2] != piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check scenario -O-OOOO where the right is the wall
+                        return true;
+                    } else if(i > 4 && i < 18 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] != piece){ // check scenario -OOOO-O-
+                        return true;
+                    } else if(i == 4 && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] != piece){ // check scenario OOOO-O- where the left is the wall
+                        return true;
+                    } else if(i == 18 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece){ // check scenario -OOOO-O where the right is the wall
+                        return true;
+                    } 
+                }
+            } 
+            return false;   
+        } else if(type == "diagonalDown"){ 
+            for(int j = 0; j < 31; j++){
+                fullSet = getDiagonalDown(j);
+            
+                if(j <= 15){
+                    rowIdx = 15-j;
+                    columnIdx = 0;
+                } else {
+                    rowIdx = 0;
+                    columnIdx = j-15;
+                }
+
+                for(int i = 0; i < fullSet.length; i++){ 
+                    this.freeSpace[0] = rowIdx+i;
+                    this.freeSpace[1] = columnIdx+i;
+
+                    if(i > 3 && i < fullSet.length-4 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check senario -OOO-OOO-
+                        return true;
+                    } else if (i == 3 && i < fullSet.length-4 && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check senario OOO-OOO- where the left is the wall
+                        return true;
+                    } else if (i > 3 && i == fullSet.length-4 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece){ // check senario -OOO-OOO where the right is the wall
+                        return true;
+                    } else if(i > 4 && i < fullSet.length-5 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario -OOOO-OOOO-
+                        return true;
+                    } else if(i == 4 && i < fullSet.length-5 && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario OOOO-OOOO- where the left is the wall
+                        return true;
+                    } else if(i > 4 && i == fullSet.length-5 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check scenario -OOOO-OOOO where the right is the wall
+                        return true;
+                    } else if(i > 3 && i < fullSet.length-5 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario -OOO-OOOO-
+                        return true;
+                    } else if(i == 3 && i < fullSet.length-5  && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario OOO-OOOO- where the left is the wall
+                        return true;
+                    } else if(i > 3 && i == fullSet.length-5 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check scenario -OOO-OOOO where the right is the wall
+                        return true;
+                    } else if(i > 4 && i < fullSet.length-4 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check scenario -OOOO-OOO-
+                        return true;
+                    } else if(i == 4 && i < fullSet.length-4 && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check scenario OOOO-OOO- where the left is the wall
+                        return true;
+                    } else if(i > 4 && i == fullSet.length-4 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece){ // check scenario -OOOO-OOO- where the right is the wall
+                        return true;
+                    } else if(i > 3 && i < fullSet.length-3 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] != piece){ // check scenario -OOO-OO-
+                        return true;
+                    } else if(i == 3 && i < fullSet.length-3 && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] != piece){ // check scenario OOO-OO- where the left is the wall
+                        return true;
+                    } else if(i > 3 && i == fullSet.length-3 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece){ // check scenario -OOO-OO where the right is the wall
+                        return true;
+                    } else if(i > 2 && i < fullSet.length-4 && fullSet[i-3] != piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check scenario -OO-OOO-
+                        return true;
+                    } else if(i == 2 && i < fullSet.length-4 && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check scenario OO-OOO- where the left is the wall
+                        return true;
+                    } else if(i > 2 && i == fullSet.length-4 && fullSet[i-3] != piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece){ // check scenario -OO-OOO where the right is the wall
+                        return true;
+                    } else if(i > 4 && i < fullSet.length-3 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] != piece){ // check scenario -OOOO-OO-
+                        return true;
+                    } else if(i == 4 && i < fullSet.length-3 && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] != piece){ // check scenario OOOO-OO- where the left is the wall
+                        return true;
+                    } else if(i > 4 && i == fullSet.length-3 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece){ // check scenario -OOOO-OO where the right is the wall
+                        return true;
+                    } else if(i > 2 && i < fullSet.length-5 && fullSet[i-3] != piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario -OO-OOOO-
+                        return true;
+                    } else if(i == 2 && i < fullSet.length-5 && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario OO-OOOO- where the left is the wall
+                        return true;
+                    } else if(i > 2 && i == fullSet.length-5 && fullSet[i-3] != piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check scenario -OO-OOOO where the right is the wall
+                        return true;
+                    } else if(i > 1 && i < fullSet.length-5 && fullSet[i-2] != piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario -O-OOOO-
+                        return true;
+                    } else if(i == 1 && i < fullSet.length-5 && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario O-OOOO- where the left is the wall
+                        return true;
+                    } else if(i > 1 && i == fullSet.length-5 && fullSet[i-2] != piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check scenario -O-OOOO where the right is the wall
+                        return true;
+                    } else if(i > 4 && i < fullSet.length-2 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] != piece){ // check scenario -OOOO-O-
+                        return true;
+                    } else if(i == 4 && i < fullSet.length-2 && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] != piece){ // check scenario OOOO-O- where the left is the wall
+                        return true;
+                    } else if(i > 4 && i == fullSet.length-2 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece){ // check scenario -OOOO-O where the right is the wall
+                        return true;
+                    } 
+                }
+            }
+            return false;
+        } else if(type == "diagonalUp"){ 
+            for(int j = 0; j < 31; j++){
+                fullSet = getDiagonalUp(j);
+            
+                if(j <= 15){
+                    rowIdx = j+4;
+                    columnIdx = 0;
+                } else {
+                    rowIdx = 19;
+                    columnIdx = j-15;
+                }
+                
+                for(int i = 0; i < fullSet.length; i++){ 
+                    this.freeSpace[0] = rowIdx-i;
+                    this.freeSpace[1] = columnIdx+i;
+
+                    if(i > 3 && i < fullSet.length-4 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check senario -OOO-OOO-
+                        return true;
+                    } else if (i == 3 && i < fullSet.length-4 && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check senario OOO-OOO- where the left is the wall
+                        return true;
+                    } else if (i > 3 && i == fullSet.length-4 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece){ // check senario -OOO-OOO where the right is the wall
+                        return true;
+                    } else if(i > 4 && i < fullSet.length-5 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario -OOOO-OOOO-
+                        return true;
+                    } else if(i == 4 && i < fullSet.length-5 && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario OOOO-OOOO- where the left is the wall
+                        return true;
+                    } else if(i > 4 && i == fullSet.length-5 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check scenario -OOOO-OOOO where the right is the wall
+                        return true;
+                    } else if(i > 3 && i < fullSet.length-5 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario -OOO-OOOO-
+                        return true;
+                    } else if(i == 3 && i < fullSet.length-5  && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario OOO-OOOO- where the left is the wall
+                        return true;
+                    } else if(i > 3 && i == fullSet.length-5 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check scenario -OOO-OOOO where the right is the wall
+                        return true;
+                    } else if(i > 4 && i < fullSet.length-4 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check scenario -OOOO-OOO-
+                        return true;
+                    } else if(i == 4 && i < fullSet.length-4 && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check scenario OOOO-OOO- where the left is the wall
+                        return true;
+                    } else if(i > 4 && i == fullSet.length-4 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece){ // check scenario -OOOO-OOO- where the right is the wall
+                        return true;
+                    } else if(i > 3 && i < fullSet.length-3 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] != piece){ // check scenario -OOO-OO-
+                        return true;
+                    } else if(i == 3 && i < fullSet.length-3 && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] != piece){ // check scenario OOO-OO- where the left is the wall
+                        return true;
+                    } else if(i > 3 && i == fullSet.length-3 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece){ // check scenario -OOO-OO where the right is the wall
+                        return true;
+                    } else if(i > 2 && i < fullSet.length-4 && fullSet[i-3] != piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check scenario -OO-OOO-
+                        return true;
+                    } else if(i == 2 && i < fullSet.length-4 && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check scenario OO-OOO- where the left is the wall
+                        return true;
+                    } else if(i > 2 && i == fullSet.length-4 && fullSet[i-3] != piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece){ // check scenario -OO-OOO where the right is the wall
+                        return true;
+                    } else if(i > 4 && i < fullSet.length-3 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] != piece){ // check scenario -OOOO-OO-
+                        return true;
+                    } else if(i == 4 && i < fullSet.length-3 && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] != piece){ // check scenario OOOO-OO- where the left is the wall
+                        return true;
+                    } else if(i > 4 && i == fullSet.length-3 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece){ // check scenario -OOOO-OO where the right is the wall
+                        return true;
+                    } else if(i > 2 && i < fullSet.length-5 && fullSet[i-3] != piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario -OO-OOOO-
+                        return true;
+                    } else if(i == 2 && i < fullSet.length-5 && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario OO-OOOO- where the left is the wall
+                        return true;
+                    } else if(i > 2 && i == fullSet.length-5 && fullSet[i-3] != piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check scenario -OO-OOOO where the right is the wall
+                        return true;
+                    } else if(i > 1 && i < fullSet.length-5 && fullSet[i-2] != piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario -O-OOOO-
+                        return true;
+                    } else if(i == 1 && i < fullSet.length-5 && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] != piece){ // check scenario O-OOOO- where the left is the wall
+                        return true;
+                    } else if(i > 1 && i == fullSet.length-5 && fullSet[i-2] != piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece){ // check scenario -O-OOOO where the right is the wall
+                        return true;
+                    } else if(i > 4 && i < fullSet.length-2 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] != piece){ // check scenario -OOOO-O-
+                        return true;
+                    } else if(i == 4 && i < fullSet.length-2 && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] != piece){ // check scenario OOOO-O- where the left is the wall
+                        return true;
+                    } else if(i > 4 && i == fullSet.length-2 && fullSet[i-5] != piece && fullSet[i-4] == piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece){ // check scenario -OOOO-O where the right is the wall
+                        return true;
+                    } 
+                }
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
+
     private boolean setOfFourInFive(String type, char piece){ 
         char[] fullSet;
         int rowIdx;
@@ -3435,7 +3736,7 @@ class FritzFP implements FinalProject{
                         return true;
                     } 
                 } else {
-                    for(int i = 0; i < fullSet.length-6; i++){ 
+                    for(int i = 0; i < fullSet.length-5; i++){ 
                         if(i == 14 && fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece && fullSet[i+5] == piece){ // check senario -OO-OO where the top right is the wall
                             this.freeSpace[0] = rowIdx-(i+3);
                             this.freeSpace[1] = columnIdx+i+3;
@@ -3444,7 +3745,7 @@ class FritzFP implements FinalProject{
                             this.freeSpace[0] = rowIdx-(i+2);
                             this.freeSpace[1] = columnIdx+i+2;
                             return true;
-                        } else if(fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario -OO-OO-
+                        } else if(i < fullSet.length-6 && fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario -OO-OO-
                             this.freeSpace[0] = rowIdx-(i+3);
                             this.freeSpace[1] = columnIdx+i+3;
                             return true;
@@ -3456,7 +3757,7 @@ class FritzFP implements FinalProject{
                             this.freeSpace[0] = rowIdx-(i+3);
                             this.freeSpace[1] = columnIdx+i+3;
                             return true;
-                        } else if(fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.' && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario -OOO-O-
+                        } else if(i < fullSet.length-6 && fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == '.' && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario -OOO-O-
                             this.freeSpace[0] = rowIdx-(i+4);
                             this.freeSpace[1] = columnIdx+i+4;
                             return true;
@@ -3468,15 +3769,15 @@ class FritzFP implements FinalProject{
                             this.freeSpace[0] = rowIdx-(i+1);
                             this.freeSpace[1] = columnIdx+i+1;
                             return true;
-                        } else if(fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario -O-OOO-
+                        } else if(i < fullSet.length-6 && fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == '.' && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario -O-OOO-
                             this.freeSpace[0] = rowIdx-(i+2);
                             this.freeSpace[1] = columnIdx+i+2;
                             return true;
-                        } else if(piece == this.computerPiece && fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.' && fullSet[i+6] != piece){ // check senario -OOOO-- 
+                        } else if(i < fullSet.length-6 && piece == this.computerPiece && fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.' && fullSet[i+6] != piece){ // check senario -OOOO-- 
                             this.freeSpace[0] = rowIdx-(i+5);
                             this.freeSpace[1] = columnIdx+i+5; 
                             return true;
-                        } else if(piece == this.computerPiece && fullSet[i] != piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario --OOOO-
+                        } else if(i < fullSet.length-6 && piece == this.computerPiece && fullSet[i] != piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario --OOOO-
                             this.freeSpace[0] = rowIdx-(i+1);
                             this.freeSpace[1] = columnIdx+i+1;
                             return true;
