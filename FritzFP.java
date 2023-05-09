@@ -144,12 +144,12 @@ class FritzFP implements FinalProject{
                 // if the pieces are interrupted block within the interuption
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(computerCanMakeFourUnblockedInARow() || computerCanMakeNineUnblockedInARow()){ // need to make computerCanMakeFourteenUnblockedInARow()
-                // check if the computer has 3/8 in a row
-                // if neither side is blocked, make 4/9 (this scenario gurantees that the computer will get 5/10)
+            } else if(computerCanMakeFourUnblockedInARow() || computerCanMakeNineUnblockedInARow() || computerCanMakeFourteenUnblockedInARow()){
+                // check if the computer has 3/8/13 in a row
+                // if neither side is blocked, make 4/9/14 (this scenario gurantees that the computer will get 5/10/15)
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(hasThreeInFive(this.opponentPiece) || hasEightInTen(this.opponentPiece)){ // need to make opponentHasThirteen(), and opponentHasEighteen() methods
+            } else if(hasThreeInFive(this.opponentPiece) || hasEightInTen(this.opponentPiece) || hasThirteenInFifteen(this.opponentPiece)){ // need to make opponentHasEighteen() method
                 // check if the opponent has unblocked three in a set of five
                 // if so, block three
                 myMove = this.freeSpace;
@@ -172,7 +172,7 @@ class FritzFP implements FinalProject{
                 // block intersection
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(hasThreeInFive(this.computerPiece) || hasEightInTen(this.computerPiece)){ // need to make computerHasThirteen(), and computerHasEighteen() methods
+            } else if(hasThreeInFive(this.computerPiece) || hasEightInTen(this.computerPiece) || hasThirteenInFifteen(this.computerPiece)){ // need to make computerHasEighteen() method
                 // check if the computer has three in a set of five
                 // make four
                 myMove = this.freeSpace;
@@ -648,6 +648,21 @@ class FritzFP implements FinalProject{
         }
     }
 
+    private boolean computerCanMakeFourteenUnblockedInARow(){ 
+        // checks if the computer can make nine in a row with neither side blocked
+        if(setOfThirteenUnblockedInFifteen("row", this.computerPiece)){
+            return true;
+        } else if(setOfThirteenUnblockedInFifteen("column", this.computerPiece)){
+            return true;
+        } else if(setOfThirteenUnblockedInFifteen("diagonalDown", this.computerPiece)){
+            return true;
+        } else if(setOfThirteenUnblockedInFifteen("diagonalUp", this.computerPiece)){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private boolean computerCanMakeNineUnblockedInARow(){ 
         // checks if the computer can make nine in a row with neither side blocked
         if(setOfEightUnblockedInTen("row", this.computerPiece)){
@@ -676,6 +691,35 @@ class FritzFP implements FinalProject{
             return true;
         } else {
             return false;
+        }
+    }
+
+    private boolean hasThirteenInFifteen(char piece){
+        if(piece == this.computerPiece){
+            if(setOfThirteenInFifteen("row", piece)){
+                return true;
+            } else if(setOfThirteenInFifteen("column", piece)){
+                return true;
+            } else if(setOfThirteenInFifteen("diagonalDown", piece)){
+                return true;
+            } else if(setOfThirteenInFifteen("diagonalUp", piece)){
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            // don't prevent 14 from being formed if one side is blocked 
+            if(setOfThirteenUnblockedInFifteen("row", piece)){
+                return true;
+            } else if(setOfThirteenUnblockedInFifteen("column", piece)){
+                return true;
+            } else if(setOfThirteenUnblockedInFifteen("diagonalDown", piece)){
+                return true;
+            } else if(setOfThirteenUnblockedInFifteen("diagonalUp", piece)){
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -1671,6 +1715,262 @@ class FritzFP implements FinalProject{
                         this.freeSpace[0] = rowIdx-i;
                         this.freeSpace[1] = columnIdx+i; 
                     }  
+                }
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean setOfThirteenUnblockedInFifteen(String type, char piece){
+        char[] fullSet;
+        int rowIdx;
+        int columnIdx;
+        int blanks;
+        int[][] spots = new int[2][2];
+        int piecesInSet;
+
+        char opposingPiece;
+        if(piece == 'X'){
+            opposingPiece = 'O';
+        } else {
+            opposingPiece = 'X';
+        }
+
+        if(type == "row"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getRow(j);
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 1; i < 19; i++){
+                    if(piecesInSet == 13 && blanks == 2){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 2) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 2){
+                        blanks++;
+                        int[] singleSpot = {j, i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else if(type == "column"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getColumn(j);
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 1; i < 19; i++){
+                    if(piecesInSet == 13 && blanks == 2){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 2) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 2){
+                        blanks++;
+                        int[] singleSpot = {i, j};
+                        spots[blanks-1] = singleSpot;
+                    }  
+                }
+            } 
+            return false;   
+        } else if(type == "diagonalDown"){ 
+            for(int j = 5; j < 26; j++){
+                fullSet = getDiagonalDown(j);
+                blanks = 0;
+                piecesInSet = 0;
+            
+                if(j <= 15){
+                    rowIdx = 15-j;
+                    columnIdx = 0;
+                } else {
+                    rowIdx = 0;
+                    columnIdx = j-15;
+                }
+
+                for(int i = 1; i < fullSet.length-1; i++){ 
+                    if(piecesInSet == 13 && blanks == 2){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 2) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 2){
+                        blanks++;
+                        int[] singleSpot = {rowIdx+i, columnIdx+i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else if(type == "diagonalUp"){ 
+            for(int j = 5; j < 26; j++){
+                fullSet = getDiagonalUp(j);
+                blanks = 0;
+                piecesInSet = 0;
+            
+                if(j <= 15){
+                    rowIdx = j+4;
+                    columnIdx = 0;
+                } else {
+                    rowIdx = 19;
+                    columnIdx = j-15;
+                }
+
+                for(int i = 1; i < fullSet.length-1; i++){ 
+                    if(piecesInSet == 13 && blanks == 2){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 2) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 2){
+                        blanks++;
+                        int[] singleSpot = {rowIdx-i, columnIdx+i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean setOfThirteenInFifteen(String type, char piece){
+        char[] fullSet;
+        int rowIdx;
+        int columnIdx;
+        int blanks;
+        int[][] spots = new int[2][2];
+        int piecesInSet;
+
+        char opposingPiece;
+        if(piece == 'X'){
+            opposingPiece = 'O';
+        } else {
+            opposingPiece = 'X';
+        }
+
+        if(type == "row"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getRow(j);
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 13 && blanks == 2){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 2) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 2){
+                        blanks++;
+                        int[] singleSpot = {j, i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else if(type == "column"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getColumn(j);
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 13 && blanks == 2){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 2) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 2){
+                        blanks++;
+                        int[] singleSpot = {i, j};
+                        spots[blanks-1] = singleSpot;
+                    }  
+                }
+            } 
+            return false;   
+        } else if(type == "diagonalDown"){ 
+            for(int j = 5; j < 26; j++){
+                fullSet = getDiagonalDown(j);
+                blanks = 0;
+                piecesInSet = 0;
+            
+                if(j <= 15){
+                    rowIdx = 15-j;
+                    columnIdx = 0;
+                } else {
+                    rowIdx = 0;
+                    columnIdx = j-15;
+                }
+
+                for(int i = 0; i < fullSet.length; i++){ 
+                    if(piecesInSet == 13 && blanks == 2){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 2) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 2){
+                        blanks++;
+                        int[] singleSpot = {rowIdx+i, columnIdx+i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else if(type == "diagonalUp"){ 
+            for(int j = 5; j < 26; j++){
+                fullSet = getDiagonalUp(j);
+                blanks = 0;
+                piecesInSet = 0;
+            
+                if(j <= 15){
+                    rowIdx = j+4;
+                    columnIdx = 0;
+                } else {
+                    rowIdx = 19;
+                    columnIdx = j-15;
+                }
+
+                for(int i = 0; i < fullSet.length; i++){ 
+                    if(piecesInSet == 13 && blanks == 2){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 2) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 2){
+                        blanks++;
+                        int[] singleSpot = {rowIdx-i, columnIdx+i};
+                        spots[blanks-1] = singleSpot;
+                    } 
                 }
             }
             return false;
