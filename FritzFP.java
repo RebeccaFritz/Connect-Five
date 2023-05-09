@@ -499,8 +499,17 @@ class FritzFP implements FinalProject{
     }
 
     private boolean computerCanWin(){
-        // checking for -OOOO, OOOO-, OO-OO, O-OOO, OOO-O in rows, columns, and diagonals
-        if(setOfFourInFive("row", this.computerPiece)){
+        // checking for 4 in a row with one side free
+        if(findRowOfN(4, this.computerPiece)){
+            return true;
+        } else if(findColumnOfN(4, this.computerPiece)){
+            return true;
+        } else if(findDiagonalDownOfN(4, this.computerPiece)){
+            return true;
+        } else if(findDiagonalUpOfN(4, this.computerPiece)){
+            return true;
+        // checking for four in a set of five
+        } else if(setOfFourInFive("row", this.computerPiece)){
             return true;
         } else if(setOfFourInFive("column", this.computerPiece)){
             return true;
@@ -550,7 +559,16 @@ class FritzFP implements FinalProject{
             return true;
         } else if(setOfNineInTen("diagonalUp", this.computerPiece)){
             return true;
-        // checking for -OOOO, OOOO-, OO-OO, O-OOO, OOO-O in rows, columns, and diagonals
+        // checking for 4 in a row with one side free
+        } else if(findRowOfN(4, this.computerPiece)){
+            return true;
+        } else if(findColumnOfN(4, this.computerPiece)){
+            return true;
+        } else if(findDiagonalDownOfN(4, this.computerPiece)){
+            return true;
+        } else if(findDiagonalUpOfN(4, this.computerPiece)){
+            return true;
+        // checking for four in a set of five
         } else if(setOfFourInFive("row", this.computerPiece)){
             return true;
         } else if(setOfFourInFive("column", this.computerPiece)){
