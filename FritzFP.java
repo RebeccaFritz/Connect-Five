@@ -3272,7 +3272,7 @@ class FritzFP implements FinalProject{
                     }  else if(i < 14 && piece == this.computerPiece && fullSet[i] != piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario --OOOO- 
                         this.freeSpace[1] = i+1;
                         return true;
-                    } else if((((i < 14 && piece == this.opponentPiece) || (i == 0 && piece == this.computerPiece) || (i == 14 && piece == this.computerPiece))) && i < 15 && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario -OOOO- 
+                    } else if((((i == 0 && piece == this.computerPiece) || (i == 14 && piece == this.computerPiece))) && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario -OOOO- 
                         int[][] spots = {{freeSpace[0], i}, {freeSpace[0], i+5}};
                         this.freeSpace = pickOptimalSpot(spots, piece);
                         return true;
@@ -3319,7 +3319,7 @@ class FritzFP implements FinalProject{
                     } else if(i < 14 && piece == this.computerPiece && fullSet[i] != piece && fullSet[i+1] == '.' && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == piece && fullSet[i+6] != piece){ // check senario --OOOO-
                         this.freeSpace[0] = i+1;
                         return true;
-                    } else if((((i < 14 && piece == this.opponentPiece) || (i == 0 && piece == this.computerPiece) || (i == 14 && piece == this.computerPiece))) && i < 15 && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario -OOOO- 
+                    } else if((((i == 0 && piece == this.computerPiece) || (i == 14 && piece == this.computerPiece))) && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario -OOOO- 
                         int[][] spots = {{i, freeSpace[1]}, {i+5, freeSpace[1]}};
                         this.freeSpace = pickOptimalSpot(spots, piece);
                         return true;
@@ -3352,15 +3352,7 @@ class FritzFP implements FinalProject{
                         this.freeSpace[0] = rowIdx+1;
                         this.freeSpace[1] = columnIdx+1;
                         return true;
-                    } else if(piece == this.computerPiece && fullSet[0] == '.' && fullSet[1] == piece && fullSet[2] == piece && fullSet[3] == piece && fullSet[4] == piece){ // check senario -OOOO 
-                        this.freeSpace[0] = rowIdx;
-                        this.freeSpace[1] = columnIdx; 
-                        return true;
-                    } else if(piece == this.computerPiece && fullSet[0] == piece && fullSet[1] == piece && fullSet[2] == piece && fullSet[3] == piece && fullSet[4] == '.'){ // check senario OOOO- 
-                        this.freeSpace[0] = rowIdx+4;
-                        this.freeSpace[1] = columnIdx+4;
-                        return true;
-                    }
+                    } 
                 } else {
                     for(int i = 0; i < fullSet.length-5; i++){ 
                         if(i == 14 && fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] =='.' && fullSet[i+4] == piece && fullSet[i+5] == piece){ // check senario -OO-OO where the bottom right is the wall
@@ -3407,7 +3399,7 @@ class FritzFP implements FinalProject{
                             this.freeSpace[0] = rowIdx+i+1;
                             this.freeSpace[1] = columnIdx+i+1;
                             return true;
-                        } else if((((i < 14 && piece == this.opponentPiece) || (i == 0 && piece == this.computerPiece) || (i == 14 && piece == this.computerPiece))) && i < 15 && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario -OOOO- 
+                        } else if((((i == 0 && piece == this.computerPiece) || (i == 14 && piece == this.computerPiece))) && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario -OOOO- 
                             int[][] spots = {{rowIdx+i, columnIdx+i}, {rowIdx+i+5, columnIdx+i+5}};
                             this.freeSpace = pickOptimalSpot(spots, piece);
                             return true;
@@ -3441,15 +3433,7 @@ class FritzFP implements FinalProject{
                         this.freeSpace[0] = rowIdx-1;
                         this.freeSpace[1] = columnIdx+1;
                         return true;
-                    } else if(piece == this.computerPiece && fullSet[0] == '.' && fullSet[1] == piece && fullSet[2] == piece && fullSet[3] == piece && fullSet[4] == piece){ // check senario -OOOO 
-                        this.freeSpace[0] = rowIdx;
-                        this.freeSpace[1] = columnIdx; 
-                        return true;
-                    } else if(piece == this.computerPiece && fullSet[0] == piece && fullSet[1] == piece && fullSet[2] == piece && fullSet[3] == piece && fullSet[4] == '.'){ // check senario OOOO- 
-                        this.freeSpace[0] = rowIdx-4;
-                        this.freeSpace[1] = columnIdx+4;
-                        return true;
-                    }
+                    } 
                 } else {
                     for(int i = 0; i < fullSet.length-6; i++){ 
                         if(i == 14 && fullSet[i] != piece && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == '.' && fullSet[i+4] == piece && fullSet[i+5] == piece){ // check senario -OO-OO where the top right is the wall
@@ -3496,7 +3480,7 @@ class FritzFP implements FinalProject{
                             this.freeSpace[0] = rowIdx-(i+1);
                             this.freeSpace[1] = columnIdx+i+1;
                             return true;
-                        } else if((((i < 14 && piece == this.opponentPiece) || (i == 0 && piece == this.computerPiece) || (i == 14 && piece == this.computerPiece))) && i < 15 && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario -OOOO- 
+                        } else if((((i == 0 && piece == this.computerPiece) || (i == 14 && piece == this.computerPiece))) && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] == piece && fullSet[i+5] == '.'){ // check senario -OOOO- 
                             int[][] spots = {{rowIdx-i, columnIdx+i}, {rowIdx-(i+5), columnIdx+i+5}};
                             this.freeSpace = pickOptimalSpot(spots, piece);
                             return true;
