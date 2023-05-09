@@ -173,17 +173,17 @@ class FritzFP implements FinalProject{
                 myMove = this.freeSpace;
                 return myMove;
             } else if(hasThreeInFive(this.computerPiece) || hasEightInTen(this.computerPiece) || hasThirteenInFifteen(this.computerPiece) || hasEighteenInTwenty(this.computerPiece)){
-                // check if the computer has 3/8/13 in a set of 5/10/15
-                // make 4/9/14 in a set of 5/10/15
+                // check if the computer has 3/8/13/18 in a set of 5/10/15/20
+                // make 4/9/14/19 in a set of 5/10/15/20
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(computerHasTwo()){ // need to make computerHasSeven(), computerHasTwelve(), and computerHasSeventeen() methods
-                // check if the computer has two in a set of five
-                // make three
+            } else if(computerHasTwo() || hasSevenInTen(this.computerPiece) || hasTwelveInFifteen(this.computerPiece) || hasSeventeenInTwenty(this.computerPiece)){
+                // check if the computer has 2/7/12/17 in a set of 5/10/15/20
+                // make 3/8/13/18
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(computerHasOne()){ // need to make computerHasSix(), computerHasEleven(), and computerHasSixteen() methods
-                // check if the computer has one piece in a set of five
+            } else if(computerHasOne() || hasSixInTen(this.computerPiece) || hasElevenInFifteen(this.computerPiece) || hasSixteenInTwenty(this.computerPiece)){ 
+                // check if the computer has 1/6/11/16 piece in a set of five
                 // make two
                 myMove = this.freeSpace;
                 return myMove;
@@ -695,20 +695,44 @@ class FritzFP implements FinalProject{
     }
 
     private boolean hasEighteenInTwenty(char piece){
-        if(piece == this.computerPiece){
-            if(setOfEighteenInTwenty("row", piece)){
-                return true;
-            } else if(setOfEighteenInTwenty("column", piece)){
-                return true;
-            } else if(setOfEighteenInTwenty("diagonalDown", piece)){
-                return true;
-            } else if(setOfEighteenInTwenty("diagonalUp", piece)){
-                return true;
-            } else {
-                return false;
-            }
+        if(setOfEighteenInTwenty("row", piece)){
+            return true;
+        } else if(setOfEighteenInTwenty("column", piece)){
+            return true;
+        } else if(setOfEighteenInTwenty("diagonalDown", piece)){
+            return true;
+        } else if(setOfEighteenInTwenty("diagonalUp", piece)){
+            return true;
         } else {
-            return false; // an unblocked set of eighteen in twenty is not possible
+            return false;
+        }
+    }
+
+    private boolean hasSeventeenInTwenty(char piece){
+        if(setOfSeventeenInTwenty("row", piece)){
+            return true;
+        } else if(setOfSeventeenInTwenty("column", piece)){
+            return true;
+        } else if(setOfSeventeenInTwenty("diagonalDown", piece)){
+            return true;
+        } else if(setOfSeventeenInTwenty("diagonalUp", piece)){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean hasSixteenInTwenty(char piece){
+        if(setOfSixteenInTwenty("row", piece)){
+            return true;
+        } else if(setOfSixteenInTwenty("column", piece)){
+            return true;
+        } else if(setOfSixteenInTwenty("diagonalDown", piece)){
+            return true;
+        } else if(setOfSixteenInTwenty("diagonalUp", piece)){
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -741,6 +765,34 @@ class FritzFP implements FinalProject{
         }
     }
 
+    private boolean hasTwelveInFifteen(char piece){
+        if(setOfTwelveInFifteen("row", piece)){
+            return true;
+        } else if(setOfTwelveInFifteen("column", piece)){
+            return true;
+        } else if(setOfTwelveInFifteen("diagonalDown", piece)){
+            return true;
+        } else if(setOfTwelveInFifteen("diagonalUp", piece)){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean hasElevenInFifteen(char piece){
+        if(setOfElevenInFifteen("row", piece)){
+            return true;
+        } else if(setOfElevenInFifteen("column", piece)){
+            return true;
+        } else if(setOfElevenInFifteen("diagonalDown", piece)){
+            return true;
+        } else if(setOfElevenInFifteen("diagonalUp", piece)){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private boolean hasEightInTen(char piece){
         if(piece == this.computerPiece){
             if(setOfEightInTen("row", piece)){
@@ -767,6 +819,34 @@ class FritzFP implements FinalProject{
             } else {
                 return false;
             }
+        }
+    }
+
+    private boolean hasSevenInTen(char piece){
+        if(setOfSevenInTen("row", piece)){
+            return true;
+        } else if(setOfSevenInTen("column", piece)){
+            return true;
+        } else if(setOfSevenInTen("diagonalDown", piece)){
+            return true;
+        } else if(setOfSevenInTen("diagonalUp", piece)){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean hasSixInTen(char piece){
+        if(setOfSixInTen("row", piece)){
+            return true;
+        } else if(setOfSixInTen("column", piece)){
+            return true;
+        } else if(setOfSixInTen("diagonalDown", piece)){
+            return true;
+        } else if(setOfSixInTen("diagonalUp", piece)){
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -1863,6 +1943,250 @@ class FritzFP implements FinalProject{
         }
     }
 
+    private boolean setOfSeventeenInTwenty(String type, char piece){
+        char[] fullSet;
+        int rowIdx;
+        int columnIdx;
+        int blanks;
+        int[][] spots = new int[3][2];
+        int piecesInSet;
+
+        char opposingPiece;
+        if(piece == 'X'){
+            opposingPiece = 'O';
+        } else {
+            opposingPiece = 'X';
+        }
+
+        if(type == "row"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getRow(j);
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 17 && blanks == 3){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 3) || fullSet[i] == opposingPiece){
+                        return false;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 3){
+                        blanks++;
+                        int[] singleSpot = {j, i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else if(type == "column"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getColumn(j);
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 17 && blanks == 3){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 3) || fullSet[i] == opposingPiece){
+                        return false;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 3){
+                        blanks++;
+                        int[] singleSpot = {i, j};
+                        spots[blanks-1] = singleSpot;
+                    }  
+                }
+            } 
+            return false;   
+        } else if(type == "diagonalDown"){ 
+            int j = 15;
+            fullSet = getDiagonalDown(j);
+            blanks = 0;
+            piecesInSet = 0;
+        
+            if(j <= 15){
+                rowIdx = 15-j;
+                columnIdx = 0;
+            } else {
+                rowIdx = 0;
+                columnIdx = j-15;
+            }
+
+            for(int i = 0; i < fullSet.length; i++){ 
+                if(piecesInSet == 17 && blanks == 3){ 
+                    this.freeSpace = pickOptimalSpot(spots, piece); 
+                    return true;
+                } else if((fullSet[i] == '.' && blanks >= 3) || fullSet[i] == opposingPiece){
+                    return false;
+                } else if(fullSet[i] == piece){ 
+                    piecesInSet++;
+                } else if(fullSet[i] == '.' && blanks < 3){
+                    blanks++;
+                    int[] singleSpot = {rowIdx+i, columnIdx+i};
+                    spots[blanks-1] = singleSpot;
+                } 
+            }
+            return false;
+        } else if(type == "diagonalUp"){ 
+            int j = 15;
+            fullSet = getDiagonalUp(j);
+            blanks = 0;
+            piecesInSet = 0;
+        
+            if(j <= 15){
+                rowIdx = j+4;
+                columnIdx = 0;
+            } else {
+                rowIdx = 19;
+                columnIdx = j-15;
+            }
+
+            for(int i = 0; i < fullSet.length; i++){ 
+                if(piecesInSet == 17 && blanks == 3){ 
+                    this.freeSpace = pickOptimalSpot(spots, piece); 
+                    return true;
+                } else if((fullSet[i] == '.' && blanks >= 3) || fullSet[i] == opposingPiece){
+                    return false;
+                } else if(fullSet[i] == piece){ 
+                    piecesInSet++;
+                } else if(fullSet[i] == '.' && blanks < 3){
+                    blanks++;
+                    int[] singleSpot = {rowIdx-i, columnIdx+i};
+                    spots[blanks-1] = singleSpot;
+                } 
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean setOfSixteenInTwenty(String type, char piece){
+        char[] fullSet;
+        int rowIdx;
+        int columnIdx;
+        int blanks;
+        int[][] spots = new int[4][2];
+        int piecesInSet;
+
+        char opposingPiece;
+        if(piece == 'X'){
+            opposingPiece = 'O';
+        } else {
+            opposingPiece = 'X';
+        }
+
+        if(type == "row"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getRow(j);
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 16 && blanks == 4){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 4) || fullSet[i] == opposingPiece){
+                        return false;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 4){
+                        blanks++;
+                        int[] singleSpot = {j, i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else if(type == "column"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getColumn(j);
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 16 && blanks == 4){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 4) || fullSet[i] == opposingPiece){
+                        return false;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 4){
+                        blanks++;
+                        int[] singleSpot = {i, j};
+                        spots[blanks-1] = singleSpot;
+                    }  
+                }
+            } 
+            return false;   
+        } else if(type == "diagonalDown"){ 
+            int j = 15;
+            fullSet = getDiagonalDown(j);
+            blanks = 0;
+            piecesInSet = 0;
+        
+            if(j <= 15){
+                rowIdx = 15-j;
+                columnIdx = 0;
+            } else {
+                rowIdx = 0;
+                columnIdx = j-15;
+            }
+
+            for(int i = 0; i < fullSet.length; i++){ 
+                if(piecesInSet == 16 && blanks == 4){ 
+                    this.freeSpace = pickOptimalSpot(spots, piece); 
+                    return true;
+                } else if((fullSet[i] == '.' && blanks >= 4) || fullSet[i] == opposingPiece){
+                    return false;
+                } else if(fullSet[i] == piece){ 
+                    piecesInSet++;
+                } else if(fullSet[i] == '.' && blanks < 4){
+                    blanks++;
+                    int[] singleSpot = {rowIdx+i, columnIdx+i};
+                    spots[blanks-1] = singleSpot;
+                } 
+            }
+            return false;
+        } else if(type == "diagonalUp"){ 
+            int j = 15;
+            fullSet = getDiagonalUp(j);
+            blanks = 0;
+            piecesInSet = 0;
+        
+            if(j <= 15){
+                rowIdx = j+4;
+                columnIdx = 0;
+            } else {
+                rowIdx = 19;
+                columnIdx = j-15;
+            }
+
+            for(int i = 0; i < fullSet.length; i++){ 
+                if(piecesInSet == 16 && blanks == 4){ 
+                    this.freeSpace = pickOptimalSpot(spots, piece); 
+                    return true;
+                } else if((fullSet[i] == '.' && blanks >= 4) || fullSet[i] == opposingPiece){
+                    return false;
+                } else if(fullSet[i] == piece){ 
+                    piecesInSet++;
+                } else if(fullSet[i] == '.' && blanks < 4){
+                    blanks++;
+                    int[] singleSpot = {rowIdx-i, columnIdx+i};
+                    spots[blanks-1] = singleSpot;
+                } 
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
+
     private boolean setOfThirteenUnblockedInFifteen(String type, char piece){
         char[] fullSet;
         int rowIdx;
@@ -2119,6 +2443,262 @@ class FritzFP implements FinalProject{
         }
     }
 
+    private boolean setOfTwelveInFifteen(String type, char piece){
+        char[] fullSet;
+        int rowIdx;
+        int columnIdx;
+        int blanks;
+        int[][] spots = new int[3][2];
+        int piecesInSet;
+
+        char opposingPiece;
+        if(piece == 'X'){
+            opposingPiece = 'O';
+        } else {
+            opposingPiece = 'X';
+        }
+
+        if(type == "row"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getRow(j);
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 12 && blanks == 3){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 3) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 3){
+                        blanks++;
+                        int[] singleSpot = {j, i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else if(type == "column"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getColumn(j);
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 12 && blanks == 3){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 3) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 3){
+                        blanks++;
+                        int[] singleSpot = {i, j};
+                        spots[blanks-1] = singleSpot;
+                    }  
+                }
+            } 
+            return false;   
+        } else if(type == "diagonalDown"){ 
+            for(int j = 10; j < 21; j++){
+                fullSet = getDiagonalDown(j);
+                blanks = 0;
+                piecesInSet = 0;
+            
+                if(j <= 15){
+                    rowIdx = 15-j;
+                    columnIdx = 0;
+                } else {
+                    rowIdx = 0;
+                    columnIdx = j-15;
+                }
+
+                for(int i = 0; i < fullSet.length; i++){ 
+                    if(piecesInSet == 12 && blanks == 3){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 3) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 3){
+                        blanks++;
+                        int[] singleSpot = {rowIdx+i, columnIdx+i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else if(type == "diagonalUp"){ 
+            for(int j = 10; j < 21; j++){
+                fullSet = getDiagonalUp(j);
+                blanks = 0;
+                piecesInSet = 0;
+            
+                if(j <= 15){
+                    rowIdx = j+4;
+                    columnIdx = 0;
+                } else {
+                    rowIdx = 19;
+                    columnIdx = j-15;
+                }
+
+                for(int i = 0; i < fullSet.length; i++){ 
+                    if(piecesInSet == 12 && blanks == 3){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 3) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 3){
+                        blanks++;
+                        int[] singleSpot = {rowIdx-i, columnIdx+i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean setOfElevenInFifteen(String type, char piece){
+        char[] fullSet;
+        int rowIdx;
+        int columnIdx;
+        int blanks;
+        int[][] spots = new int[4][2];
+        int piecesInSet;
+
+        char opposingPiece;
+        if(piece == 'X'){
+            opposingPiece = 'O';
+        } else {
+            opposingPiece = 'X';
+        }
+
+        if(type == "row"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getRow(j);
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 11 && blanks == 3){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 4) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 4){
+                        blanks++;
+                        int[] singleSpot = {j, i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else if(type == "column"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getColumn(j);
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 11 && blanks == 3){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 4) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 4){
+                        blanks++;
+                        int[] singleSpot = {i, j};
+                        spots[blanks-1] = singleSpot;
+                    }  
+                }
+            } 
+            return false;   
+        } else if(type == "diagonalDown"){ 
+            for(int j = 10; j < 21; j++){
+                fullSet = getDiagonalDown(j);
+                blanks = 0;
+                piecesInSet = 0;
+            
+                if(j <= 15){
+                    rowIdx = 15-j;
+                    columnIdx = 0;
+                } else {
+                    rowIdx = 0;
+                    columnIdx = j-15;
+                }
+
+                for(int i = 0; i < fullSet.length; i++){ 
+                    if(piecesInSet == 11 && blanks == 4){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 4) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 4){
+                        blanks++;
+                        int[] singleSpot = {rowIdx+i, columnIdx+i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else if(type == "diagonalUp"){ 
+            for(int j = 10; j < 21; j++){
+                fullSet = getDiagonalUp(j);
+                blanks = 0;
+                piecesInSet = 0;
+            
+                if(j <= 15){
+                    rowIdx = j+4;
+                    columnIdx = 0;
+                } else {
+                    rowIdx = 19;
+                    columnIdx = j-15;
+                }
+
+                for(int i = 0; i < fullSet.length; i++){ 
+                    if(piecesInSet == 11 && blanks == 3){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 4) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 4){
+                        blanks++;
+                        int[] singleSpot = {rowIdx-i, columnIdx+i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
+
     private boolean setOfEightUnblockedInTen(String type, char piece){
         char[] fullSet;
         int rowIdx;
@@ -2363,6 +2943,262 @@ class FritzFP implements FinalProject{
                     } else if(fullSet[i] == piece){ 
                         piecesInSet++;
                     } else if(fullSet[i] == '.' && blanks < 2){
+                        blanks++;
+                        int[] singleSpot = {rowIdx-i, columnIdx+i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean setOfSevenInTen(String type, char piece){
+        char[] fullSet;
+        int rowIdx;
+        int columnIdx;
+        int blanks;
+        int[][] spots = new int[3][2];
+        int piecesInSet;
+
+        char opposingPiece;
+        if(piece == 'X'){
+            opposingPiece = 'O';
+        } else {
+            opposingPiece = 'X';
+        }
+
+        if(type == "row"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getRow(j);
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 7 && blanks == 3){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 3) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 3){
+                        blanks++;
+                        int[] singleSpot = {j, i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else if(type == "column"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getColumn(j);
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 7 && blanks == 3){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 3) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 3){
+                        blanks++;
+                        int[] singleSpot = {i, j};
+                        spots[blanks-1] = singleSpot;
+                    }  
+                }
+            } 
+            return false;   
+        } else if(type == "diagonalDown"){ 
+            for(int j = 5; j < 26; j++){
+                fullSet = getDiagonalDown(j);
+                blanks = 0;
+                piecesInSet = 0;
+            
+                if(j <= 15){
+                    rowIdx = 15-j;
+                    columnIdx = 0;
+                } else {
+                    rowIdx = 0;
+                    columnIdx = j-15;
+                }
+
+                for(int i = 0; i < fullSet.length; i++){ 
+                    if(piecesInSet == 7 && blanks == 3){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 3) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 3){
+                        blanks++;
+                        int[] singleSpot = {rowIdx+i, columnIdx+i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else if(type == "diagonalUp"){ 
+            for(int j = 5; j < 26; j++){
+                fullSet = getDiagonalUp(j);
+                blanks = 0;
+                piecesInSet = 0;
+            
+                if(j <= 15){
+                    rowIdx = j+4;
+                    columnIdx = 0;
+                } else {
+                    rowIdx = 19;
+                    columnIdx = j-15;
+                }
+
+                for(int i = 0; i < fullSet.length; i++){ 
+                    if(piecesInSet == 7 && blanks == 3){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 3) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 3){
+                        blanks++;
+                        int[] singleSpot = {rowIdx-i, columnIdx+i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean setOfSixInTen(String type, char piece){
+        char[] fullSet;
+        int rowIdx;
+        int columnIdx;
+        int blanks;
+        int[][] spots = new int[4][2];
+        int piecesInSet;
+
+        char opposingPiece;
+        if(piece == 'X'){
+            opposingPiece = 'O';
+        } else {
+            opposingPiece = 'X';
+        }
+
+        if(type == "row"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getRow(j);
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 6 && blanks == 4){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 4) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 4){
+                        blanks++;
+                        int[] singleSpot = {j, i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else if(type == "column"){
+            for(int j = 0; j < 20; j++){
+                fullSet = getColumn(j);
+                blanks = 0;
+                piecesInSet = 0;
+
+                for(int i = 0; i < 20; i++){
+                    if(piecesInSet == 6 && blanks == 4){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 4) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 4){
+                        blanks++;
+                        int[] singleSpot = {i, j};
+                        spots[blanks-1] = singleSpot;
+                    }  
+                }
+            } 
+            return false;   
+        } else if(type == "diagonalDown"){ 
+            for(int j = 5; j < 26; j++){
+                fullSet = getDiagonalDown(j);
+                blanks = 0;
+                piecesInSet = 0;
+            
+                if(j <= 15){
+                    rowIdx = 15-j;
+                    columnIdx = 0;
+                } else {
+                    rowIdx = 0;
+                    columnIdx = j-15;
+                }
+
+                for(int i = 0; i < fullSet.length; i++){ 
+                    if(piecesInSet == 6 && blanks == 4){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 4) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 4){
+                        blanks++;
+                        int[] singleSpot = {rowIdx+i, columnIdx+i};
+                        spots[blanks-1] = singleSpot;
+                    } 
+                }
+            }
+            return false;
+        } else if(type == "diagonalUp"){ 
+            for(int j = 5; j < 26; j++){
+                fullSet = getDiagonalUp(j);
+                blanks = 0;
+                piecesInSet = 0;
+            
+                if(j <= 15){
+                    rowIdx = j+4;
+                    columnIdx = 0;
+                } else {
+                    rowIdx = 19;
+                    columnIdx = j-15;
+                }
+
+                for(int i = 0; i < fullSet.length; i++){ 
+                    if(piecesInSet == 6 && blanks == 4){ 
+                        this.freeSpace = pickOptimalSpot(spots, piece); 
+                        return true;
+                    } else if((fullSet[i] == '.' && blanks >= 4) || fullSet[i] == opposingPiece){
+                        blanks = 0;
+                        piecesInSet = 0;
+                    } else if(fullSet[i] == piece){ 
+                        piecesInSet++;
+                    } else if(fullSet[i] == '.' && blanks < 4){
                         blanks++;
                         int[] singleSpot = {rowIdx-i, columnIdx+i};
                         spots[blanks-1] = singleSpot;
