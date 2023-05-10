@@ -26,12 +26,12 @@ class FritzFP implements FinalProject{
             if(playerOneOpen() || playerTwoOpen()){
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(hasFourInFive(this.computerPiece)){ // hasSpecialWinScenario(this.computerPiece)
+            } else if(hasFourInFive(this.computerPiece) || hasSpecialWinScenario(this.computerPiece)){
                 // check if the computer has four in a row
                 // if so, take win
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(hasFourInFive(this.opponentPiece)){ // hasSpecialWinScenario(this.opponentPiece)
+            } else if(hasFourInFive(this.opponentPiece) || hasSpecialWinScenario(this.opponentPiece)){
                 // block win
                 // if the player has four uninterupted pieces, only block if one side is already blocked 
                 // if the pieces are interrupted block within the interuption
@@ -131,13 +131,13 @@ class FritzFP implements FinalProject{
             if(playerOneOpen() || playerTwoOpen()){
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(computerCanWinLong()){ // hasSpecialWinScenario(this.computerPiece)
+            } else if(computerCanWinLong() || hasSpecialWinScenario(this.computerPiece)){
                 // check if the computer has 4, 9, 14, or 19 
                 // with a free space on at least one side
                 // if so, make 5, 10, 15, or 20 (respectively)
                 myMove = this.freeSpace;
                 return myMove;
-            } else if(opponentCanWinLong()){ // hasSpecialWinScenario(this.opponentPiece)
+            } else if(opponentCanWinLong() || hasSpecialWinScenario(this.opponentPiece)){ 
                 // block win
                 // if the opponent has 4, 9, 14, or 19 uninterupted pieces
                 // only block if one side is already blocked 
@@ -3228,7 +3228,7 @@ class FritzFP implements FinalProject{
                 fullSet = getRow(j);
                 this.freeSpace[0] = j;
 
-                for(int i = 0; i < 20; i++){
+                for(int i = 1; i < 19; i++){
                     this.freeSpace[1] = i;
                     if(i > 3 && i < 16 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check senario -OOO-OOO-
                         return true;
@@ -3299,7 +3299,7 @@ class FritzFP implements FinalProject{
                 fullSet = getColumn(j);
                 this.freeSpace[1] = j;
 
-                for(int i = 0; i < 15; i++){
+                for(int i = 1; i < 19; i++){
                     this.freeSpace[0] = i;
                     if(i > 3 && i < 16 && fullSet[i-4] != piece && fullSet[i-3] == piece && fullSet[i-2] == piece && fullSet[i-1] == piece && fullSet[i] == '.' && fullSet[i+1] == piece && fullSet[i+2] == piece && fullSet[i+3] == piece && fullSet[i+4] != piece){ // check senario -OOO-OOO-
                         return true;
@@ -3377,7 +3377,7 @@ class FritzFP implements FinalProject{
                     columnIdx = j-15;
                 }
 
-                for(int i = 0; i < fullSet.length; i++){ 
+                for(int i = 1; i < fullSet.length; i++){ 
                     this.freeSpace[0] = rowIdx+i;
                     this.freeSpace[1] = columnIdx+i;
 
@@ -3457,7 +3457,7 @@ class FritzFP implements FinalProject{
                     columnIdx = j-15;
                 }
                 
-                for(int i = 0; i < fullSet.length; i++){ 
+                for(int i = 1; i < fullSet.length; i++){ 
                     this.freeSpace[0] = rowIdx-i;
                     this.freeSpace[1] = columnIdx+i;
 
