@@ -1,3 +1,5 @@
+// The following interface was written by Dr. Hochberg and Dr. Chastain at the University of Dallas
+
 /**
  * Interface for everybody's final projects
  */
