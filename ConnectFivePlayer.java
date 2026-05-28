@@ -1,6 +1,6 @@
 import java.util.Random;
 
-class FritzFP implements FinalProject{
+class ConnectFivePlayer implements FinalProject{
 
     // Private Variables
         private Random random = new Random();
