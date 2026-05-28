@@ -4,7 +4,7 @@
  * Interface for everybody's final projects
  */
 
- public interface FinalProject {
+ public interface ConnectFiveInterface {
     /**
      * Place a new piece on the board to win the Short Game
      * 'X' for Player 1, or 'O' for Player 2
